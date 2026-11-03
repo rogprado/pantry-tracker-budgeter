@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import FilterBar from "@/app/pantry/FilterBar";
 import ItemList from "@/app/pantry/ItemList";
-import { parseFilters, type ItemFilters } from "@/lib/filters";
+import { parseFilters } from "@/lib/filters";
 import { listCategories, listItems } from "@/lib/pantry";
 
 export default async function PantryPage({ searchParams }: PageProps<"/pantry">) {
@@ -13,7 +12,8 @@ export default async function PantryPage({ searchParams }: PageProps<"/pantry">)
   if (!data.user) redirect("/login");
 
   const filters = parseFilters(await searchParams);
-  const categories = await listCategories();
+  const filtering = Boolean(filters.q || filters.category || filters.stock);
+  const [items, categories] = await Promise.all([listItems(filters), listCategories()]);
 
   return (
     <div className="space-y-4">
@@ -24,49 +24,29 @@ export default async function PantryPage({ searchParams }: PageProps<"/pantry">)
         </Link>
       </div>
 
-      {/* No categories means no items yet, so there's nothing to filter. */}
-      {/* key: refill the inputs from the URL after "Clear all" or the back button. */}
-      {categories.length > 0 && (
-        <FilterBar key={JSON.stringify(filters)} filters={filters} categories={categories} />
-      )}
+      {(items.length > 0 || filtering) && <FilterBar filters={filters} categories={categories} />}
 
-      {/* Only this part waits for the new results; the header and filters stay put. */}
-      <Suspense key={JSON.stringify(filters)} fallback={<div className="card text-gray-500">Searching…</div>}>
-        <Results filters={filters} />
-      </Suspense>
+      {items.length === 0 ? (
+        <div className="card text-gray-600">
+          {filtering ? (
+            <>
+              No items match these filters.{" "}
+              <Link href="/pantry" className="font-semibold text-primary">Clear all</Link>
+            </>
+          ) : (
+            "Your pantry is empty. Add your first item to get started."
+          )}
+        </div>
+      ) : (
+        <>
+          {filtering && (
+            <p className="text-sm text-gray-600">
+              {items.length} {items.length === 1 ? "item" : "items"} found
+            </p>
+          )}
+          <ItemList items={items} />
+        </>
+      )}
     </div>
-  );
-}
-
-async function Results({ filters }: { filters: ItemFilters }) {
-  const items = await listItems(filters);
-  const filtering = Boolean(filters.q || filters.category || filters.stock);
-
-  if (items.length === 0) {
-    return (
-      <div className="card text-gray-600">
-        {filtering ? (
-          <>
-            No items match these filters.{" "}
-            <Link href="/pantry" scroll={false} className="font-semibold text-primary">
-              Clear all
-            </Link>
-          </>
-        ) : (
-          "Your pantry is empty. Add your first item to get started."
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <>
-      {filtering && (
-        <p className="text-sm text-gray-600">
-          {items.length} {items.length === 1 ? "item" : "items"} found
-        </p>
-      )}
-      <ItemList items={items} />
-    </>
   );
 }
