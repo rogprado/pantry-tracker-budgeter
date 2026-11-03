@@ -16,7 +16,7 @@ export default function AuthForm({ mode, action, notice }: Props) {
 
   if (state?.message) {
     return (
-      <div className="card">
+      <div className="card mx-auto max-w-md">
         <h1 className="text-2xl font-bold text-heading">Check your email</h1>
         <p className="mt-3">{state.message}</p>
       </div>
@@ -24,7 +24,7 @@ export default function AuthForm({ mode, action, notice }: Props) {
   }
 
   return (
-    <form action={formAction} noValidate className="card space-y-4">
+    <form action={formAction} noValidate className="card mx-auto max-w-md space-y-4">
       <h1 className="text-2xl font-bold text-heading">
         {isSignup ? "Create your account" : "Welcome back"}
       </h1>
