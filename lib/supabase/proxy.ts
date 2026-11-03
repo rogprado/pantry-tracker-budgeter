@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED = ["/pantry"];
+const PROTECTED = ["/pantry", "/dashboard"];
 const AUTH_PAGES = ["/login", "/signup"];
 
 // Refreshes the login session on every request and redirects:

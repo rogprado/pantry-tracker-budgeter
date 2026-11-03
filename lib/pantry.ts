@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import type { ItemFilters } from "@/lib/filters";
+import type { StatItem } from "@/lib/stats";
 
 export type Category = { id: number; name: string };
 
@@ -76,6 +77,21 @@ export async function listStaples(): Promise<PantryItem[]> {
     .order("name");
   if (error) throw error;
   return (data ?? []) as unknown as PantryItem[];
+}
+
+// The few columns the dashboard needs, for all of my items.
+export async function listStatItems(): Promise<StatItem[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("pantry_items")
+    .select("price, purchased_on, expires_on, in_stock, categories(name)");
+  if (error) throw error;
+  type Row = Omit<StatItem, "category"> & { categories: { name: string } | null };
+  return ((data ?? []) as unknown as Row[]).map(({ categories, ...rest }) => ({
+    ...rest,
+    price: rest.price === null ? null : Number(rest.price),
+    category: categories?.name ?? "Uncategorized",
+  }));
 }
 
 export async function listCategories(): Promise<Category[]> {
