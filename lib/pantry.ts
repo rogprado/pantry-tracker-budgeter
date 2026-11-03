@@ -14,10 +14,14 @@ export type PantryItem = {
   in_stock: boolean;
   created_at: string;
   categories: { name: string } | null;
+  stars: { item_id: number }[]; // RLS returns only my star, so non-empty means I starred it
 };
 
-const ITEM_COLUMNS =
+export const isStarred = (item: PantryItem) => item.stars.length > 0;
+
+const BASE_COLUMNS =
   "id, category_id, name, quantity, unit, price, purchased_on, expires_on, in_stock, created_at, categories(name)";
+const ITEM_COLUMNS = `${BASE_COLUMNS}, stars(item_id)`;
 
 // All queries use the logged-in user's session, so RLS returns only their rows.
 
@@ -41,6 +45,18 @@ export async function getItem(id: number): Promise<PantryItem | null> {
     .maybeSingle();
   if (error) throw error;
   return data as unknown as PantryItem | null;
+}
+
+// Starred items only (an inner join on stars). Out-of-stock first, since those need restocking.
+export async function listStaples(): Promise<PantryItem[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("pantry_items")
+    .select(`${BASE_COLUMNS}, stars!inner(item_id)`)
+    .order("in_stock", { ascending: true })
+    .order("name");
+  if (error) throw error;
+  return (data ?? []) as unknown as PantryItem[];
 }
 
 export async function listCategories(): Promise<Category[]> {

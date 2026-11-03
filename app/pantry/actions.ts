@@ -78,3 +78,17 @@ export async function deleteItem(itemId: number) {
   revalidatePath("/pantry");
   redirect("/pantry");
 }
+
+// Starring adds a row to the stars junction table; unstarring deletes it.
+export async function setStar(itemId: number, starred: boolean) {
+  const supabase = await createClient();
+  if (starred) {
+    const { error } = await supabase.from("stars").insert({ item_id: itemId });
+    // 23505 = already starred (e.g. a double click); that's fine.
+    if (error && error.code !== "23505") throw new Error("Couldn't star this item.");
+  } else {
+    const { error } = await supabase.from("stars").delete().eq("item_id", itemId);
+    if (error) throw new Error("Couldn't unstar this item.");
+  }
+  revalidatePath("/pantry", "layout");
+}

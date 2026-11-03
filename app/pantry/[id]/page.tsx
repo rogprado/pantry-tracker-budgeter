@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import DeleteButton from "@/app/pantry/DeleteButton";
-import { formatDate, formatQuantity, getItem } from "@/lib/pantry";
+import StarButton from "@/app/pantry/StarButton";
+import { formatDate, formatQuantity, getItem, isStarred } from "@/lib/pantry";
 
 export default async function ItemPage({ params }: PageProps<"/pantry/[id]">) {
   const { id } = await params;
@@ -23,7 +24,10 @@ export default async function ItemPage({ params }: PageProps<"/pantry/[id]">) {
         ← Back to pantry
       </Link>
       <div className="card space-y-4">
-        <h1 className="text-2xl font-bold text-heading">{item.name}</h1>
+        <div className="flex items-center justify-between gap-4">
+          <h1 className="text-2xl font-bold text-heading">{item.name}</h1>
+          <StarButton itemId={item.id} starred={isStarred(item)} />
+        </div>
         <dl className="divide-y divide-lavender">
           {rows.map(([label, value]) => (
             <div key={label} className="flex justify-between py-2">
