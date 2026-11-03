@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import type { ItemFilters } from "@/lib/filters";
 
 export type Category = { id: number; name: string };
 
@@ -25,13 +26,31 @@ const ITEM_COLUMNS = `${BASE_COLUMNS}, stars(item_id)`;
 
 // All queries use the logged-in user's session, so RLS returns only their rows.
 
-export async function listItems(): Promise<PantryItem[]> {
+export async function listItems(filters: ItemFilters = {}): Promise<PantryItem[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("pantry_items")
-    .select(ITEM_COLUMNS)
-    .order("expires_on", { ascending: true, nullsFirst: false })
-    .order("name");
+  let query = supabase.from("pantry_items").select(ITEM_COLUMNS);
+
+  if (filters.q) {
+    // Escape LIKE wildcards so "50%" searches for the text "50%".
+    const escaped = filters.q.replace(/[\\%_]/g, (c) => `\\${c}`);
+    query = query.ilike("name", `%${escaped}%`);
+  }
+  if (filters.category) query = query.eq("category_id", filters.category);
+  if (filters.stock) query = query.eq("in_stock", filters.stock === "in");
+
+  switch (filters.sort ?? "expiry") {
+    case "newest":
+      query = query.order("created_at", { ascending: false });
+      break;
+    case "price":
+      query = query.order("price", { ascending: true, nullsFirst: false });
+      break;
+    default:
+      query = query.order("expires_on", { ascending: true, nullsFirst: false });
+  }
+  query = query.order("name");
+
+  const { data, error } = await query;
   if (error) throw error;
   return (data ?? []) as unknown as PantryItem[];
 }
