@@ -3,69 +3,70 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import {
+  NEW_CATEGORY,
+  readItemForm,
+  validateItem,
+  type FieldErrors,
+  type ItemFormValues,
+} from "@/lib/validation";
 
-export type ItemFormState = { error?: string } | undefined;
+export type ItemFormState =
+  | { error?: string; fieldErrors?: FieldErrors; values?: ItemFormValues }
+  | undefined;
 
-const NEW_CATEGORY = "new";
-
-// Creates an item (itemId undefined) or updates one. Feature 4 adds detailed validation messages.
+// Creates an item (itemId undefined) or updates one.
+// Validates on the server even though the browser also checks, so nothing invalid is ever saved.
 export async function saveItem(
   itemId: number | undefined,
   _prev: ItemFormState,
   formData: FormData,
 ): Promise<ItemFormState> {
+  const values = readItemForm(formData);
+  const fieldErrors = validateItem(values);
+  if (Object.keys(fieldErrors).length > 0) return { fieldErrors, values };
+
   const supabase = await createClient();
-  const text = (key: string) => String(formData.get(key) ?? "").trim();
-  const numberOrNull = (key: string) => (text(key) === "" ? null : Number(text(key)));
-  const dateOrNull = (key: string) => text(key) || null;
 
   // Category: an existing one, or create a new one (reusing a same-named one if it exists).
-  let categoryId: number | null = null;
-  const categoryChoice = text("category_id");
-  if (categoryChoice === NEW_CATEGORY) {
-    const newName = text("new_category");
-    if (newName) {
-      const { data: existing } = await supabase
+  let categoryId: number;
+  if (values.category_id === NEW_CATEGORY) {
+    const { data: existing } = await supabase
+      .from("categories")
+      .select("id")
+      .ilike("name", values.new_category)
+      .maybeSingle();
+    if (existing) {
+      categoryId = existing.id;
+    } else {
+      const { data: created, error } = await supabase
         .from("categories")
+        .insert({ name: values.new_category })
         .select("id")
-        .ilike("name", newName)
-        .maybeSingle();
-      if (existing) {
-        categoryId = existing.id;
-      } else {
-        const { data: created, error } = await supabase
-          .from("categories")
-          .insert({ name: newName })
-          .select("id")
-          .single();
-        if (error) return { error: "We couldn't create that category. Please try again." };
-        categoryId = created.id;
-      }
+        .single();
+      if (error || !created) return { error: "We couldn't create that category. Please try again.", values };
+      categoryId = created.id;
     }
-  } else if (categoryChoice) {
-    categoryId = Number(categoryChoice);
+  } else {
+    categoryId = Number(values.category_id);
   }
 
-  const values = {
-    name: text("name"),
+  const row = {
+    name: values.name,
     category_id: categoryId,
-    quantity: numberOrNull("quantity"),
-    unit: text("unit") || null,
-    price: numberOrNull("price"),
-    purchased_on: dateOrNull("purchased_on"),
-    expires_on: dateOrNull("expires_on"),
-    in_stock: formData.get("in_stock") === "on",
+    quantity: Number(values.quantity),
+    unit: values.unit || null,
+    price: values.price ? Number(values.price) : null,
+    purchased_on: values.purchased_on || null,
+    expires_on: values.expires_on || null,
+    in_stock: values.in_stock,
   };
 
-  if (!values.name || values.category_id === null || values.quantity === null || Number.isNaN(values.quantity)) {
-    return { error: "Please fill in the name, category and quantity." };
-  }
-
   const query = itemId
-    ? supabase.from("pantry_items").update(values).eq("id", itemId).select("id").single()
-    : supabase.from("pantry_items").insert(values).select("id").single();
+    ? supabase.from("pantry_items").update(row).eq("id", itemId).select("id").single()
+    : supabase.from("pantry_items").insert(row).select("id").single();
   const { data, error } = await query;
-  if (error || !data) return { error: "We couldn't save this item. Please check the fields and try again." };
+  if (error || !data) return { error: "We couldn't save this item. Please try again.", values };
 
   revalidatePath("/pantry");
   redirect(`/pantry/${data.id}`);
