@@ -19,7 +19,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Suspense fallback={<div className="h-[57px] border-b border-lavender bg-white" />}>
           <Header />
         </Suspense>
-        <main className="mx-auto w-full max-w-md flex-1 px-4 py-10">
+        <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
           <Suspense fallback={<div className="card text-gray-500">Loading…</div>}>{children}</Suspense>
         </main>
       </body>
