@@ -1,17 +1,19 @@
 "use client";
 
+import Form from "next/form";
 import Link from "next/link";
 import type { Category } from "@/lib/pantry";
 import { SORTS, type ItemFilters } from "@/lib/filters";
 
-// A plain GET form, so every choice ends up in the URL (?q=&category=&stock=&sort=).
+// Puts every choice in the URL (?q=&category=&stock=&sort=). next/form updates the URL
+// without a full page reload, so only the item list below refreshes.
 // Dropdowns apply as soon as they change; search applies on Enter or "Search".
 export default function FilterBar({ filters, categories }: { filters: ItemFilters; categories: Category[] }) {
   const submit = (e: React.ChangeEvent<HTMLSelectElement>) => e.currentTarget.form?.requestSubmit();
   const active = Boolean(filters.q || filters.category || filters.stock || filters.sort);
 
   return (
-    <form action="/pantry" className="card grid gap-3 p-4 sm:grid-cols-2">
+    <Form action="/pantry" scroll={false} className="card grid gap-3 p-4 sm:grid-cols-2">
       <div className="flex gap-2 sm:col-span-2">
         <input
           name="q"
@@ -51,11 +53,11 @@ export default function FilterBar({ filters, categories }: { filters: ItemFilter
           ))}
         </select>
         {active && (
-          <Link href="/pantry" className="ml-auto font-semibold text-primary">
+          <Link href="/pantry" scroll={false} className="ml-auto font-semibold text-primary">
             Clear all
           </Link>
         )}
       </label>
-    </form>
+    </Form>
   );
 }
