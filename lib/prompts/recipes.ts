@@ -19,6 +19,8 @@ How to choose recipes:
 
 How to fill in each recipe:
 - title: a short, plain dish name.
+- minutes: realistic total time in minutes, prep plus cooking, as a whole number.
+- servings: how many people it feeds, as a whole number.
 - ingredients: every ingredient with an amount (for example "200 g" or "2"). Set in_pantry to true only if it is one of the user's items or a kitchen basic listed above; otherwise false.
 - steps: 3 to 8 short steps, one action each, no numbering.
 - uses_expiring: the exact names, as written in the user's list, of items expiring within 7 days that this recipe uses. Use an empty list if none.`;

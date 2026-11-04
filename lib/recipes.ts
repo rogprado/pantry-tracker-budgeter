@@ -4,6 +4,8 @@ import { z } from "zod";
 // then checked again here before anything is shown or saved.
 export const RecipeSchema = z.object({
   title: z.string(),
+  minutes: z.number(), // total time, prep + cooking
+  servings: z.number(),
   ingredients: z.array(z.object({ name: z.string(), amount: z.string(), in_pantry: z.boolean() })),
   steps: z.array(z.string()),
   uses_expiring: z.array(z.string()),
@@ -21,6 +23,9 @@ export function cleanRecipes(raw: unknown, pantryNames: string[]): Recipe[] | nu
   const recipes = parsed.data.recipes
     .map((r) => ({
       title: r.title.trim(),
+      // Keep sensible values only; anything odd becomes 0 and isn't shown.
+      minutes: r.minutes >= 1 && r.minutes <= 600 ? Math.round(r.minutes) : 0,
+      servings: r.servings >= 1 && r.servings <= 20 ? Math.round(r.servings) : 0,
       ingredients: r.ingredients
         .map((i) => ({ ...i, name: i.name.trim(), amount: i.amount.trim() }))
         .filter((i) => i.name),

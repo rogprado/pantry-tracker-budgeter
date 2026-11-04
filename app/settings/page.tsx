@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import BudgetBar from "@/app/components/BudgetBar";
 import BudgetForm from "@/app/settings/BudgetForm";
+import { PageHeader } from "@/app/components/ui";
 import { listStatItems } from "@/lib/pantry";
 import { monthName, spentThisMonth, todayInTimeZone } from "@/lib/stats";
 import { createClient } from "@/lib/supabase/server";
@@ -18,8 +19,8 @@ export default async function SettingsPage() {
   const budget = profile.data?.monthly_budget == null ? null : Number(profile.data.monthly_budget);
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-heading">Settings</h1>
+    <div className="max-w-3xl space-y-6">
+      <PageHeader eyebrow="Settings" title="Your kitchen, your rules" subtitle={`Signed in as ${data.user.email ?? "you"}.`} />
       <BudgetForm current={budget} />
       {budget !== null && (
         <BudgetBar spent={spentThisMonth(items, today)} budget={budget} month={monthName(today.slice(0, 7)).split(" ")[0]} />

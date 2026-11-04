@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { buttonClass } from "@/app/components/ui/Button";
 import { monthName, type Period } from "@/lib/stats";
 
 type Choice = "this" | "months" | "year" | "all";
@@ -32,53 +33,63 @@ export default function PeriodFilter({
   ];
 
   return (
-    <form method="get" action="/dashboard" className="card space-y-3 p-4">
-      <fieldset className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <legend className="sr-only">Period</legend>
-        <span className="text-sm font-semibold">Period</span>
-        {options.map(([value, label]) => (
-          <label key={value} className="flex items-center gap-1.5 text-sm">
-            <input
-              type="radio"
-              name="period"
-              value={value}
-              checked={choice === value}
-              onChange={() => setChoice(value)}
-              className="accent-primary"
-            />
-            {label}
+    <form method="get" action="/dashboard" className="rounded-card border border-lavender-200/70 bg-white p-4 shadow-card">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <fieldset className="flex flex-wrap items-center gap-3">
+          <legend className="sr-only">Period</legend>
+          <span className="text-sm font-bold text-ink">Period</span>
+          <div className="flex flex-wrap rounded-xl bg-lavender p-1">
+            {options.map(([value, label]) => (
+              <label
+                key={value}
+                className="flex cursor-pointer items-center rounded-lg px-3 py-1.5 text-sm font-bold text-muted transition hover:text-eggplant has-[:checked]:bg-white has-[:checked]:text-eggplant has-[:checked]:shadow-sm has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-primary/25"
+              >
+                <input
+                  type="radio"
+                  name="period"
+                  value={value}
+                  checked={choice === value}
+                  onChange={() => setChoice(value)}
+                  className="sr-only"
+                />
+                {label}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        {choice === "year" && (
+          <label className="flex items-center gap-2 text-sm font-bold">
+            <span>Year</span>
+            <select name="year" defaultValue={selectedYear} className="rounded-xl border border-lavender-300 bg-white px-3 py-2 text-base">
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
           </label>
-        ))}
-      </fieldset>
+        )}
+
+        <button type="submit" className={buttonClass("primary", "sm")}>
+          Apply
+        </button>
+      </div>
 
       {choice === "months" && (
-        <fieldset className="flex flex-wrap gap-2">
-          <legend className="mb-2 text-sm text-gray-600">Tick one or more months:</legend>
+        <fieldset className="mt-4 flex flex-wrap gap-2 border-t border-lavender-200 pt-4">
+          <legend className="mb-2 text-sm text-muted">Tick one or more months:</legend>
           {months.map((m) => (
-            <label key={m} className="flex items-center gap-1.5 rounded-lg bg-lavender px-2.5 py-1 text-sm">
+            <label
+              key={m}
+              className="flex cursor-pointer items-center gap-2 rounded-full border border-lavender-300 px-3 py-1.5 text-sm font-semibold text-ink has-[:checked]:border-primary has-[:checked]:bg-primary/10 has-[:checked]:text-eggplant"
+            >
               <input type="checkbox" name="m" value={m} defaultChecked={selectedMonths.includes(m)} className="accent-primary" />
               {monthName(m)}
             </label>
           ))}
         </fieldset>
       )}
-
-      {choice === "year" && (
-        <label className="flex items-center gap-2 text-sm">
-          <span>Year</span>
-          <select name="year" defaultValue={selectedYear} className="input mt-0 w-auto">
-            {years.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
-        </label>
-      )}
-
-      <button type="submit" className="btn">
-        Apply
-      </button>
     </form>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { Star } from "lucide-react";
 import { useOptimistic, useTransition } from "react";
 import { setStar } from "@/app/pantry/actions";
 
@@ -24,9 +25,9 @@ export default function StarButton({ itemId, starred }: { itemId: number; starre
           }
         })
       }
-      className={`text-2xl leading-none ${shown ? "text-warning" : "text-gray-300 hover:text-warning"}`}
+      className={`grid h-9 w-9 shrink-0 place-items-center rounded-full transition hover:bg-lavender-200/70 ${shown ? "text-primary" : "text-lavender-300 hover:text-plum"}`}
     >
-      {shown ? "★" : "☆"}
+      <Star size={20} strokeWidth={2.25} fill={shown ? "currentColor" : "none"} aria-hidden="true" />
     </button>
   );
 }

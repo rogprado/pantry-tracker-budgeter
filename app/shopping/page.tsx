@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import BudgetBar from "@/app/components/BudgetBar";
 import ShoppingList, { type BudgetInfo } from "@/app/shopping/ShoppingList";
+import { PageHeader } from "@/app/components/ui";
+import marketProduce from "@/public/images/market-produce.jpg";
 import { listStaples, listStatItems } from "@/lib/pantry";
 import { monthName, spentThisMonth, todayInTimeZone } from "@/lib/stats";
 import { createClient } from "@/lib/supabase/server";
@@ -19,7 +21,7 @@ export default async function ShoppingPage() {
 
   const toRestock = staples
     .filter((s) => !s.in_stock)
-    .map((s) => ({ id: s.id, name: s.name, price: s.price === null ? null : Number(s.price) }));
+    .map((s) => ({ id: s.id, name: s.name, price: s.price === null ? null : Number(s.price), category: s.categories?.name ?? "Other" }));
 
   const monthly = profile.data?.monthly_budget;
   const spentNow = spentThisMonth(statItems, today);
@@ -36,7 +38,13 @@ export default async function ShoppingPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-heading">Shopping list</h1>
+      <PageHeader
+        eyebrow="Shopping"
+        title="Your shopping list"
+        subtitle="Restock your staples, add a few smart buys, and stay inside your budget."
+        image={marketProduce}
+        imageAlt="Fresh tomatoes and carrots at a market stall"
+      />
       <BudgetBar spent={spentNow} budget={budget ? budget.monthly : null} month={monthLabel} />
       <ShoppingList staples={toRestock} budget={budget} />
     </div>

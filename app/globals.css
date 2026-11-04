@@ -1,30 +1,75 @@
 @import "tailwindcss";
 
+/* ---------- Design tokens: the one place for colors, fonts, radius, shadows and type sizes ---------- */
 @theme inline {
-  --color-primary: #6b4eff;
-  --color-heading: #3d2a8c;
-  --color-lavender: #f4f1ff;
-  --color-warning: #f5a524;
-  --color-danger: #e5484d;
+  /* Brand: purple as a food color */
+  --color-eggplant: #3b1a4a; /* headings, brand */
+  --color-plum: #6e3a8c; /* links, active navigation */
+  --color-primary: #7c4ddb; /* buttons */
+  --color-primary-strong: #6d3fd0; /* button hover */
+  --color-heading: #3b1a4a;
+
+  /* Surfaces: a well-lit kitchen */
+  --color-lavender: #f7f4fc; /* page background */
+  --color-lavender-200: #ece5f7; /* borders, dividers, soft fills */
+  --color-lavender-300: #ddd2ef;
+  --color-ink: #2b2233; /* body text */
+  --color-muted: #5e5568; /* secondary text (7:1 on white) */
+
+  /* Status accents, used only for status and always with a word or icon */
+  --color-fresh: #2e8b57; /* herb green: fresh, in stock, under budget */
+  --color-fresh-ink: #1e6b42;
+  --color-fresh-soft: #eaf6ef;
+  --color-soon: #d4880f; /* citrus amber: use soon, close to budget */
+  --color-soon-ink: #8a4b00;
+  --color-soon-soft: #fdf3e1;
+  --color-expired: #d9483b; /* tomato red: expired, over budget */
+  --color-expired-ink: #b3261e;
+  --color-expired-soft: #fdecea;
+  /* Older names still used in a few places */
+  --color-warning: #d4880f;
+  --color-danger: #b3261e;
+
+  /* Type: Nunito for reading, soft Fraunces for titles and big numbers */
   --font-sans: var(--font-nunito), system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --text-xs: 0.8125rem; /* 13px: pills and tiny labels only */
+  --text-xs--line-height: 1.25rem;
+  --text-sm: 0.9375rem; /* 15px: the smallest body text */
+  --text-sm--line-height: 1.4rem;
+  --text-base: 1rem;
+
+  /* Shape */
+  --radius-card: 1.25rem;
+  --shadow-card: 0 1px 2px rgb(59 26 74 / 0.05), 0 10px 30px -14px rgb(59 26 74 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(59 26 74 / 0.06), 0 16px 40px -16px rgb(59 26 74 / 0.28);
 }
 
 body {
   background: var(--color-lavender);
-  color: #1f1b2e;
+  color: var(--color-ink);
+  font-size: 1rem;
+}
+
+/* Soft, rounded Fraunces for titles and big numbers */
+.font-display {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  letter-spacing: -0.01em;
 }
 
 @layer components {
+  /* Kept so any markup still using these names matches the new look; new code uses app/components/ui. */
   .card {
-    @apply rounded-2xl bg-white p-6 shadow-sm;
+    @apply rounded-card border border-lavender-200/70 bg-white p-6 shadow-card;
   }
   .input {
-    @apply mt-1 block w-full rounded-xl border border-gray-300 px-3 py-2 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20;
+    @apply mt-1.5 block w-full rounded-xl border border-lavender-300 bg-white px-3.5 py-2.5 text-base text-ink outline-none transition placeholder:text-muted/70 focus:border-primary focus:ring-4 focus:ring-primary/15;
   }
   .btn {
-    @apply rounded-xl bg-primary px-4 py-2 font-semibold text-white hover:opacity-90 disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 font-bold text-white shadow-sm transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60;
   }
   .btn-outline {
-    @apply rounded-xl border border-primary px-3 py-1.5 font-semibold text-primary hover:bg-lavender;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-lavender-300 bg-white px-4 py-2 font-bold text-plum transition hover:border-plum/40 hover:bg-lavender;
   }
 }
