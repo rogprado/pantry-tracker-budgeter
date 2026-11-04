@@ -23,15 +23,15 @@ export default async function ItemPage({ params }: PageProps<"/pantry/[id]">) {
 
   return (
     <div className="space-y-6">
-      <Link href="/pantry" className="inline-flex items-center gap-1.5 text-sm font-bold text-plum hover:text-eggplant">
+      <Link href="/pantry" className="inline-flex items-center gap-1.5 text-sm font-semibold text-plum hover:text-eggplant">
         <ArrowLeft size={16} aria-hidden="true" /> Back to your pantry
       </Link>
 
-      <article className="max-w-3xl rounded-card border border-lavender-200/70 bg-white p-8 shadow-card">
+      <article className="max-w-3xl rounded-card border border-lavender-200 bg-white p-8">
         <header className="flex flex-wrap items-start gap-4">
           <CategoryIcon name={item.categories?.name} size="lg" />
           <div className="min-w-0 flex-1">
-            <h1 className="font-display text-4xl font-semibold text-eggplant">{item.name}</h1>
+            <h1 className="font-display text-4xl font-medium text-eggplant">{item.name}</h1>
             <div className="mt-2 flex flex-wrap gap-2">
               {item.in_stock ? <StatusPill tone="fresh">In stock</StatusPill> : <StatusPill tone="neutral">Out of stock</StatusPill>}
               {item.in_stock && <FreshnessPill expiresOn={item.expires_on} today={today} />}
@@ -43,12 +43,12 @@ export default async function ItemPage({ params }: PageProps<"/pantry/[id]">) {
 
         <dl className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {facts.map(({ Icon, label, value }) => (
-            <div key={label} className="rounded-2xl bg-lavender p-4">
-              <dt className="flex items-center gap-2 text-sm font-bold text-muted">
+            <div key={label} className="rounded-lg bg-lavender p-4">
+              <dt className="flex items-center gap-2 text-sm font-semibold text-muted">
                 <Icon size={16} className="text-plum" aria-hidden="true" />
                 {label}
               </dt>
-              <dd className="font-display mt-1 text-2xl font-semibold text-eggplant">{value}</dd>
+              <dd className="font-display mt-1 text-2xl font-medium text-eggplant">{value}</dd>
             </div>
           ))}
         </dl>

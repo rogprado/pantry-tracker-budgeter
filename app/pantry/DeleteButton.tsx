@@ -20,8 +20,8 @@ export default function DeleteButton({ itemId, itemName }: { itemId: number; ite
   }
 
   return (
-    <div role="alertdialog" aria-label="Confirm delete" className="w-full rounded-2xl border border-expired/30 bg-expired-soft p-5">
-      <p className="font-display text-xl font-semibold text-expired-ink">Are you sure?</p>
+    <div role="alertdialog" aria-label="Confirm delete" className="w-full rounded-lg border border-expired/30 bg-expired-soft p-5">
+      <p className="font-display text-xl font-medium text-expired-ink">Are you sure?</p>
       <p className="mt-1 text-base text-ink">&ldquo;{itemName}&rdquo; will be deleted for good.</p>
       <div className="mt-4 flex gap-3">
         <button type="button" disabled={pending} onClick={() => startTransition(() => deleteItem(itemId))} className={buttonClass("danger")}>

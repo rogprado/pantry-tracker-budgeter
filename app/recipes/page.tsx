@@ -29,7 +29,7 @@ export default async function RecipesPage() {
       <RecipeSuggester />
 
       <section className="space-y-4">
-        <h2 className="font-display text-3xl font-semibold text-eggplant">Your recipe box</h2>
+        <h2 className="font-display text-3xl font-medium text-eggplant">Your recipe box</h2>
         {!saved?.length ? (
           <EmptyState
             compact
@@ -40,21 +40,21 @@ export default async function RecipesPage() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {saved.map((r) => (
-              <details key={r.id} className="group overflow-hidden rounded-card border border-lavender-200/70 bg-white shadow-card">
+              <details key={r.id} className="group overflow-hidden rounded-card border border-lavender-200 bg-white">
                 <summary className="flex cursor-pointer items-center gap-3 p-5">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-lavender-200/70 text-plum">
+                  <span className="shrink-0 text-plum">
                     <BookHeart size={20} aria-hidden="true" />
                   </span>
-                  <span className="font-display flex-1 text-xl font-semibold text-eggplant">{r.title}</span>
-                  <span className="text-sm font-bold text-plum group-open:hidden">Open</span>
+                  <span className="font-display flex-1 text-xl font-medium text-eggplant">{r.title}</span>
+                  <span className="text-sm font-semibold text-plum group-open:hidden">Open</span>
                 </summary>
                 <div className="grid gap-4 border-t border-lavender-200 p-5 text-sm sm:grid-cols-2">
                   <div>
-                    <h3 className="font-bold text-ink">Ingredients</h3>
+                    <h3 className="font-semibold text-ink">Ingredients</h3>
                     <p className="mt-1 whitespace-pre-line text-muted">{r.ingredients}</p>
                   </div>
                   <div>
-                    <h3 className="font-bold text-ink">Method</h3>
+                    <h3 className="font-semibold text-ink">Method</h3>
                     <p className="mt-1 whitespace-pre-line text-muted">{r.instructions}</p>
                   </div>
                 </div>

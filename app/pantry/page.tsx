@@ -57,7 +57,7 @@ export default async function PantryPage({ searchParams }: PageProps<"/pantry">)
       ) : (
         <>
           {filtering && (
-            <p className="text-sm font-bold text-muted">
+            <p className="text-sm font-semibold text-muted">
               {items.length} {items.length === 1 ? "item" : "items"} found
             </p>
           )}

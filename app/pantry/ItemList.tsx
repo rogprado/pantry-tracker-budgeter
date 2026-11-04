@@ -12,18 +12,18 @@ export function ItemRow({ item, today, showCategory = false, fade = true }: { it
       <StarButton itemId={item.id} starred={isStarred(item)} />
       <Link
         href={`/pantry/${item.id}`}
-        className="group flex min-w-0 flex-1 items-center gap-3 rounded-xl px-2 py-2.5 transition hover:bg-lavender"
+        className="group flex min-w-0 flex-1 items-center gap-3 rounded-lg px-2 py-2.5 transition hover:bg-lavender"
       >
         {showCategory && <CategoryIcon name={item.categories?.name} size="sm" />}
         <span className="min-w-0 flex-1">
           <span className="flex flex-wrap items-center gap-2">
-            <span className="truncate text-base font-bold text-ink">{item.name}</span>
+            <span className="truncate text-base font-semibold text-ink">{item.name}</span>
             {!item.in_stock && <StatusPill tone="neutral">Out of stock</StatusPill>}
             {item.in_stock && <FreshnessPill expiresOn={item.expires_on} today={today} />}
           </span>
           {showCategory && <span className="block text-sm text-muted">{item.categories?.name}</span>}
         </span>
-        <span className="font-display shrink-0 text-xl font-semibold text-eggplant">{formatQuantity(item)}</span>
+        <span className="font-display shrink-0 text-xl font-medium text-eggplant">{formatQuantity(item)}</span>
         <ChevronRight size={18} className="shrink-0 text-lavender-300 transition group-hover:text-plum" aria-hidden="true" />
       </Link>
     </li>
@@ -42,11 +42,11 @@ export function Shelves({ items, today }: { items: PantryItem[]; today: string }
   return (
     <div className="grid gap-5 xl:grid-cols-2">
       {ordered.map(([name, shelfItems]) => (
-        <section key={name} className="rounded-card border border-lavender-200/70 bg-white shadow-card">
+        <section key={name} className="rounded-card border border-lavender-200 bg-white">
           <header className="flex items-center gap-3 border-b border-lavender-200 px-5 py-4">
             <CategoryIcon name={name} />
-            <h2 className="font-display flex-1 text-xl font-semibold text-eggplant">{name}</h2>
-            <span className="text-sm font-bold text-muted">
+            <h2 className="font-display flex-1 text-xl font-medium text-eggplant">{name}</h2>
+            <span className="text-sm font-semibold text-muted">
               {shelfItems.length} {shelfItems.length === 1 ? "item" : "items"}
             </span>
           </header>

@@ -10,7 +10,7 @@ export default function BudgetBar({ spent, budget, month }: { spent: number; bud
     return (
       <Card className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-lavender-200/70 text-plum">
+          <span className="shrink-0 text-plum">
             <PiggyBank size={20} aria-hidden="true" />
           </span>
           <p className="text-base text-muted">Set a monthly grocery budget and we&apos;ll keep an eye on it for you.</p>
@@ -32,11 +32,11 @@ export default function BudgetBar({ spent, budget, month }: { spent: number; bud
   return (
     <Card>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-display text-xl font-semibold text-eggplant">{month} budget</h2>
+        <h2 className="font-display text-xl font-medium text-eggplant">{month} budget</h2>
         <p className="text-base text-muted">
-          <span className="font-display text-2xl font-semibold text-eggplant">{money(s.spent)}</span> of {money(s.budget)} ·{" "}
+          <span className="font-display text-2xl font-medium text-eggplant">{money(s.spent)}</span> of {money(s.budget)} ·{" "}
           {s.percent}%
-          <a href="/settings" className="ml-3 text-sm font-bold text-plum hover:text-eggplant">
+          <a href="/settings" className="ml-3 text-sm font-semibold text-plum hover:text-eggplant">
             Edit
           </a>
         </p>

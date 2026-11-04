@@ -52,7 +52,7 @@ export default function ShoppingList({ staples, budget }: { staples: ShoppingSta
       <div className="space-y-6">
         {/* Part 1: staples to restock, grouped by category */}
         <section className="space-y-3">
-          <h2 className="font-display flex items-center gap-2 text-2xl font-semibold text-eggplant">
+          <h2 className="font-display flex items-center gap-2 text-2xl font-medium text-eggplant">
             <Star size={22} className="text-primary" fill="currentColor" aria-hidden="true" /> Running low
           </h2>
           {staples.length === 0 ? (
@@ -63,16 +63,16 @@ export default function ShoppingList({ staples, budget }: { staples: ShoppingSta
               body={
                 <>
                   Nothing to restock. Star the things you always keep around on your{" "}
-                  <Link href="/pantry" className="font-bold text-plum">pantry</Link> and they&apos;ll show up here when they run out.
+                  <Link href="/pantry" className="font-semibold text-plum">pantry</Link> and they&apos;ll show up here when they run out.
                 </>
               }
             />
           ) : (
             orderedAisles.map(([category, items]) => (
-              <div key={category} className="rounded-card border border-lavender-200/70 bg-white shadow-card">
+              <div key={category} className="rounded-card border border-lavender-200 bg-white">
                 <div className="flex items-center gap-3 border-b border-lavender-200 px-5 py-3">
                   <CategoryIcon name={category} size="sm" />
-                  <h3 className="font-bold text-eggplant">{category}</h3>
+                  <h3 className="font-semibold text-eggplant">{category}</h3>
                 </div>
                 <ul className="divide-y divide-lavender-200/70">
                   {items.map((s) => (
@@ -97,7 +97,7 @@ export default function ShoppingList({ staples, budget }: { staples: ShoppingSta
         {/* Part 2: Claude's suggestions */}
         <section className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="font-display flex items-center gap-2 text-2xl font-semibold text-eggplant">
+            <h2 className="font-display flex items-center gap-2 text-2xl font-medium text-eggplant">
               <Lightbulb size={22} className="text-primary" aria-hidden="true" /> Worth trying
             </h2>
             <Button onClick={suggest} disabled={loading} icon={<Sparkles size={18} aria-hidden="true" />}>
@@ -119,14 +119,14 @@ export default function ShoppingList({ staples, budget }: { staples: ShoppingSta
             </p>
           )}
           {error && (
-            <p role="alert" className="rounded-xl bg-expired-soft px-4 py-3 text-base font-semibold text-expired-ink">
+            <p role="alert" className="rounded-lg bg-expired-soft px-4 py-3 text-base font-semibold text-expired-ink">
               {error.message}
               {error.code && <span className="ml-2 text-xs font-normal opacity-80">(code: {error.code})</span>}
             </p>
           )}
 
           {suggestions && fit.kept.length > 0 && (
-            <ol className="divide-y divide-lavender-200/70 rounded-card border border-lavender-200/70 bg-white shadow-card">
+            <ol className="divide-y divide-lavender-200/70 rounded-card border border-lavender-200 bg-white">
               {fit.kept.map((s, n) => (
                 <CheckRow
                   key={s.name}
@@ -142,7 +142,7 @@ export default function ShoppingList({ staples, budget }: { staples: ShoppingSta
 
           {fit.dropped.length > 0 && (
             <div className="rounded-card border-2 border-dashed border-lavender-300 bg-white/60 p-5">
-              <h3 className="text-sm font-bold text-muted">Left out to stay on budget</h3>
+              <h3 className="text-sm font-semibold text-muted">Left out to stay on budget</h3>
               <ul className="mt-2 space-y-1 text-base text-muted">
                 {fit.dropped.map((s) => (
                   <li key={s.name} className="flex justify-between gap-4">
@@ -158,18 +158,18 @@ export default function ShoppingList({ staples, budget }: { staples: ShoppingSta
       </div>
 
       {/* Budget summary, kept in view while scrolling on laptops */}
-      <aside className={`space-y-3 rounded-card border bg-white p-6 shadow-card lg:sticky lg:top-8 ${over ? "border-expired/40" : "border-lavender-200/70"}`}>
-        <h2 className="flex items-center gap-2 text-sm font-bold text-muted">
+      <aside className={`space-y-3 rounded-card border bg-white p-6 lg:sticky lg:top-8 ${over ? "border-expired/40" : "border-lavender-200"}`}>
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-muted">
           <ShoppingBasket size={18} className="text-plum" aria-hidden="true" /> Estimated total
         </h2>
-        <p className="font-display text-5xl font-semibold text-eggplant">{money(fit.total)}</p>
+        <p className="font-display text-5xl font-medium text-eggplant">{money(fit.total)}</p>
         {budget ? (
           <>
             <p className="text-base text-muted">
-              of <span className="font-bold text-ink">{money(budget.remaining)}</span> left in your {budget.month} budget
+              of <span className="font-semibold text-ink">{money(budget.remaining)}</span> left in your {budget.month} budget
             </p>
             {over ? (
-              <p className="flex items-start gap-2 rounded-xl bg-expired-soft p-3 text-sm font-semibold text-expired-ink" role="status">
+              <p className="flex items-start gap-2 rounded-lg bg-expired-soft p-3 text-sm font-semibold text-expired-ink" role="status">
                 <CircleAlert size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
                 {fit.staplesOverBudget
                   ? `Your staples alone come to ${money(fit.staplesTotal)}, more than the ${money(Math.max(0, budget.remaining))} left, so no extras were added.`
@@ -184,7 +184,7 @@ export default function ShoppingList({ staples, budget }: { staples: ShoppingSta
         ) : (
           <p className="text-base text-muted">
             No monthly budget set, so nothing is left out for cost.{" "}
-            <Link href="/settings" className="font-bold text-plum">Set one</Link>
+            <Link href="/settings" className="font-semibold text-plum">Set one</Link>
           </p>
         )}
         <p className="border-t border-lavender-200 pt-3 text-sm text-muted">Ticks are saved on this device so you can check things off in the shop.</p>
@@ -208,10 +208,10 @@ function CheckRow({ checked, onToggle, name, detail, price }: { checked: boolean
           {checked && <Check size={16} strokeWidth={3} />}
         </span>
         <span className="min-w-0 flex-1">
-          <span className={`block text-base font-bold ${checked ? "text-muted line-through" : "text-ink"}`}>{name}</span>
+          <span className={`block text-base font-semibold ${checked ? "text-muted line-through" : "text-ink"}`}>{name}</span>
           <span className="block text-sm text-muted">{detail}</span>
         </span>
-        <span className={`shrink-0 text-base font-bold ${checked ? "text-muted" : "text-eggplant"}`}>{price}</span>
+        <span className={`shrink-0 text-base font-semibold ${checked ? "text-muted" : "text-eggplant"}`}>{price}</span>
       </label>
     </li>
   );

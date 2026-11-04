@@ -73,20 +73,20 @@ export default function ItemForm({ action, categories, item, cancelHref }: Props
   const inputClass = (field: ItemField) => `input ${errors[field] ? "!border-expired-ink/60" : ""}`;
 
   return (
-    <form action={formAction} onSubmit={handleSubmit} noValidate className="max-w-2xl space-y-5 rounded-card border border-lavender-200/70 bg-white p-8 shadow-card">
+    <form action={formAction} onSubmit={handleSubmit} noValidate className="max-w-2xl space-y-5 rounded-card border border-lavender-200 bg-white p-8">
       {Object.keys(errors).length > 0 && (
-        <p role="alert" className="rounded-xl bg-expired-soft px-4 py-3 text-sm font-semibold text-expired-ink">
+        <p role="alert" className="rounded-lg bg-expired-soft px-4 py-3 text-sm font-semibold text-expired-ink">
           Almost there. Please fix the fields marked below.
         </p>
       )}
       {state?.error && (
-        <p role="alert" className="rounded-xl bg-expired-soft px-4 py-3 text-sm font-semibold text-expired-ink">
+        <p role="alert" className="rounded-lg bg-expired-soft px-4 py-3 text-sm font-semibold text-expired-ink">
           {state.error}
         </p>
       )}
 
       <label className="block">
-        <span className="text-sm font-bold text-ink">Name</span>
+        <span className="text-sm font-semibold text-ink">Name</span>
         <input
           name="name"
           defaultValue={v.name}
@@ -98,7 +98,7 @@ export default function ItemForm({ action, categories, item, cancelHref }: Props
       </label>
 
       <label className="block">
-        <span className="text-sm font-bold text-ink">Category</span>
+        <span className="text-sm font-semibold text-ink">Category</span>
         <select
           name="category_id"
           value={categoryChoice}
@@ -128,7 +128,7 @@ export default function ItemForm({ action, categories, item, cancelHref }: Props
 
       <div className="grid grid-cols-2 gap-4">
         <label className="block">
-          <span className="text-sm font-bold text-ink">Quantity</span>
+          <span className="text-sm font-semibold text-ink">Quantity</span>
           <input
             name="quantity"
             type="number"
@@ -141,13 +141,13 @@ export default function ItemForm({ action, categories, item, cancelHref }: Props
           <FieldError field="quantity" errors={errors} />
         </label>
         <label className="block">
-          <span className="text-sm font-bold text-ink">Unit</span>
+          <span className="text-sm font-semibold text-ink">Unit</span>
           <input name="unit" defaultValue={v.unit} className="input" placeholder="e.g. kg, cans" />
         </label>
       </div>
 
       <label className="block">
-        <span className="text-sm font-bold text-ink">
+        <span className="text-sm font-semibold text-ink">
           Price ($) <span className="font-normal text-muted">optional</span>
         </span>
         <input
@@ -164,23 +164,23 @@ export default function ItemForm({ action, categories, item, cancelHref }: Props
 
       <div className="grid grid-cols-2 gap-4">
         <label className="block">
-          <span className="text-sm font-bold text-ink">Purchased on</span>
+          <span className="text-sm font-semibold text-ink">Purchased on</span>
           <input name="purchased_on" type="date" defaultValue={v.purchased_on} className="input" />
         </label>
         <label className="block">
-          <span className="text-sm font-bold text-ink">Expires on</span>
+          <span className="text-sm font-semibold text-ink">Expires on</span>
           <input name="expires_on" type="date" defaultValue={v.expires_on} className="input" />
         </label>
       </div>
 
-      <label className="flex w-fit cursor-pointer items-center gap-2.5 rounded-xl bg-lavender px-4 py-3">
+      <label className="flex w-fit cursor-pointer items-center gap-2.5 rounded-lg bg-lavender px-4 py-3">
         <input
           name="in_stock"
           type="checkbox"
           defaultChecked={v.in_stock}
           className="h-5 w-5 accent-primary"
         />
-        <span className="text-sm font-bold text-ink">In stock</span>
+        <span className="text-sm font-semibold text-ink">In stock</span>
       </label>
 
       <div className="flex gap-3 border-t border-lavender-200 pt-5">
