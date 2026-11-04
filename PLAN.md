@@ -143,3 +143,35 @@ Clean but warm: friendly rather than corporate.
 - **Cut first if I run out of time:** the "versatile ingredients" part of the shopping list. It
   becomes a plain restock list of out-of-stock staples, still within budget.
 - **Cut second:** saving recipes. Suggestions would show on screen without being stored.
+
+## 8. Plan vs. Reality
+
+### How this plan started
+
+I first started with an app for Focus - which proved to be very difficult to build (I needed external applications and most of it would run outside the web app) - so I scrapped it.
+
+### Feature by feature
+
+| Planned feature | Shipped / Changed / Cut | Status (Done/Backlogged) | Learning | What changed and why (one line) |
+| --- | --- | --- | --- | --- |
+| 1. Sign up and login | Changed | Done | Having login built in the app is very slow, specially when logging in multiple times (for each test environment) - using APIs is more comfortable, but may cost money for bigger apps | Added "Continue with Google" and "Continue with GitHub" (PR #32) on top of email/password |
+| 2. Data model | Shipped | Done | | Built as planned (PR #6 |
+| 3. Create, read, update, delete | Shipped | Done | | Built as planned (PR #8). |
+| 4. Validation | Shipped | Done | Checks belong in the database too, not only in the form. | Friendly messages in the form plus database checks on quantity and price (PR #10). |
+| 5. Stars (staples) | Shipped | Done | | Built as planned (PR #12). |
+| 6. Find things | Shipped | Done | Not every QoL is worth it: I tried at first to make the page not reload as a whole, just the specific field and it broke the app in every try. I dropped it. | An agent "no reload" upgrade duplicated the search bar on every "Clear all"; I caught it and had it reverted (PR #14). |
+| 7. Dashboard | Changed | Done | Just because you have data does not mean you have to show it: the app had spending by category and it was absolutely useless without more data | Added period filters and spending over time to the Dashboard. Had to fix the X axis, which was broken (PR #16). |
+| 8. What can I cook? | Shipped | Done | Testing on localhost can make you think everything is working when it is not: Vercel authorizations were wrong and the app shipped broken, had to be fixed. | Changed API authorizations in order to make sure it worked. Feature shipped as intended. |
+| 9. Smart shopping list | Shipped | Done | | |
+| 10. Budget tracker | Shipped | Done | | Built as planned (PR #22); |
+| Test: data isolation | Shipped | Done | | PR #24, with red/green screenshots. |
+| Test: dashboard stat | Shipped | Done | | PR #26, with red/green screenshots. |
+| Design: purple and white, Nunito | Changed | Done | Claude is really good at design but needs minimal references - the app was very ugly and barebones with just colour and font, but as soon as I added some references it became really good | First pass felt childish (PR #28); refined to an editorial serif (Newsreader) with Inter, thinner borders and a login inside the main layout (PR #31). |
+| Quick quantity updates and "I cooked this" (not planned) | Added | Done | Having all the functions I need is not enough - it has to be convenient - I cooked some fried rice to test and taking the ingredients off the list was unbearable | Fix (PR #34): −/+, "Used half", "Used all" and Undo on each item, a log of every use and purchase, and a minimal "I cooked this" on saved recipes. |
+| Spreadsheet import (not planned) | Added | Done | Adding items one by one is the slowest part of a pantry app. | From stranger-test feedback: import .csv or .xlsx with a preview that flags bad rows; existing items get topped up instead of duplicated (PR #36). |
+| Receipt or online-order photo (not planned) | Cut | Backlogged | Novel features can be way more difficult to build than what I first thought. Data writing through multiple steps might be dangerous to my database. | From stranger-test feedback; scoped but not built: matching receipt abbreviations to my items needs a review screen, or wrong matches could quietly corrupt quantities and spending. |
+| Purchases counted as spending (implied by features 7 and 10) | Changed | Backlogged | Two ways of recording the same fact (item price vs. purchase log) drift apart. | "+" and spreadsheet top-ups update quantity but not spending, because spending still comes from each item's single price and purchase date (see the rewritten Database section in my reflection). |
+| Unit conversion, e.g. 200 g + 10 kg of rice (not planned) | Cut | Backlogged | | Quantities only add up when the units match; conversion between g and kg, ml and L was not built. |
+| Suggested staples and ingredient-usage chart (not planned) | Cut | Backlogged | Useful things can be built afterwards if they need weeks of data - I can just backlog it and track the variables | The purchase and use log now exists, so this can be built on it later. |
+| "Cook with these" picker for recipe ideas (not planned) | Cut | Backlogged | | Choosing must-use ingredients before asking for recipes; left for after Demo Day. |
+| Recipe catalog file (not planned) | Cut | Backlogged | No need to store what I can bring from an API | A 50-recipe reference file was prepared to make recipe matching cheaper and more reliable, but recipes still come only from Claude. |
