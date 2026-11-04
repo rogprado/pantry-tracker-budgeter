@@ -1,15 +1,14 @@
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { logout } from "@/app/auth/actions";
+import { LogoMark } from "@/app/components/Logo";
 import NavLinks from "@/app/components/NavLinks";
 import { createClient } from "@/lib/supabase/server";
 
 export function BrandMark() {
   return (
     <Link href="/" className="flex items-center gap-2.5">
-      <span className="grid h-10 w-10 place-items-center rounded-2xl bg-eggplant text-xl" aria-hidden="true">
-        🍆
-      </span>
+      <LogoMark size={40} />
       <span className="font-display text-2xl font-semibold text-eggplant">Pantry</span>
     </Link>
   );

@@ -61,3 +61,11 @@ Done when: every page shares one consistent, fresh look, and every
 feature still works exactly as before.
 
 ok
+
+## 2026-11-03 (follow-up)
+
+The eggplant as a pantry is very suggestive. Can you change to an stylized P? And add pictures/images of a kitchen? It works, the site is getting really nice
+
+### Summary
+Built a shared design system: tokens in `app/globals.css` (eggplant/plum brand, button purple, white and lavender surfaces, herb green / citrus amber / tomato red for status only, soft Fraunces for titles and numbers, Nunito at 15px+), components in `app/components/ui/` (Button, Card, StatCard, Field/Input/Select, EmptyState, PageHeader with optional photo banner, CategoryIcon by keyword, StatusPill, FreshnessPill), and a sidebar with icons and an active state. Restyled every page: login/signup as a split screen with a kitchen photo, dashboard with "Use it soon" first, pantry grouped into category shelves with freshness pills and faded out-of-stock items, item page and form, staples ("Running low" / "On the shelf"), recipes as index cards with time, servings, "You have X of Y" and to-buy chips, shopping as a tickable checklist grouped by category with a sticky budget total, and settings. Replaced the eggplant emoji with an SVG "P" logo (also the favicon) and added four CC0 kitchen photos (credits in `public/images/CREDITS.md`).
+Agreed behavior additions: recipe `minutes`/`servings` in the Claude schema and prompt (not saved to the DB), shopping ticks in browser storage, and a read-only `itemsToUseSoon` helper. Checked with before/after screenshots and a 14-step click-through on a temporary account (deleted afterwards); all passed. Fixed along the way: overlapping chart date labels, sidebar background stopping short, "Rice"/"Pecans" matching the wrong category icon, a lint error on dynamic icons, and two click-through test expectations that were mine, not the app's. Unsplash search needed a key and Openverse timed out, so photos came from Wikimedia Commons. Pre-existing `Date.now()` prerender warnings in the server log are unchanged.

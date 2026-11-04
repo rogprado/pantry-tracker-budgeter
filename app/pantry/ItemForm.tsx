@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { buttonClass } from "@/app/components/ui/Button";
 import { useActionState, useState, type FormEvent } from "react";
 import type { Category, PantryItem } from "@/lib/pantry";
 import type { ItemFormState } from "@/app/pantry/actions";
@@ -37,7 +38,8 @@ function valuesFromItem(item?: PantryItem): Partial<ItemFormValues> {
 function FieldError({ field, errors }: { field: ItemField; errors: FieldErrors }) {
   if (!errors[field]) return null;
   return (
-    <p id={`${field}-error`} className="mt-1 text-sm text-danger">
+    <p id={`${field}-error`} className="mt-1.5 flex items-center gap-1.5 text-sm font-semibold text-expired-ink">
+      <span aria-hidden="true">⚠</span>
       {errors[field]}
     </p>
   );
@@ -68,23 +70,23 @@ export default function ItemForm({ action, categories, item, cancelHref }: Props
 
   const invalid = (field: ItemField) =>
     errors[field] ? { "aria-invalid": true, "aria-describedby": `${field}-error` } : {};
-  const inputClass = (field: ItemField) => `input ${errors[field] ? "border-danger" : ""}`;
+  const inputClass = (field: ItemField) => `input ${errors[field] ? "!border-expired-ink/60" : ""}`;
 
   return (
-    <form action={formAction} onSubmit={handleSubmit} noValidate className="card space-y-4">
+    <form action={formAction} onSubmit={handleSubmit} noValidate className="max-w-2xl space-y-5 rounded-card border border-lavender-200/70 bg-white p-8 shadow-card">
       {Object.keys(errors).length > 0 && (
-        <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-danger">
+        <p role="alert" className="rounded-xl bg-expired-soft px-4 py-3 text-sm font-semibold text-expired-ink">
           Almost there. Please fix the fields marked below.
         </p>
       )}
       {state?.error && (
-        <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-danger">
+        <p role="alert" className="rounded-xl bg-expired-soft px-4 py-3 text-sm font-semibold text-expired-ink">
           {state.error}
         </p>
       )}
 
       <label className="block">
-        <span className="text-sm font-semibold">Name</span>
+        <span className="text-sm font-bold text-ink">Name</span>
         <input
           name="name"
           defaultValue={v.name}
@@ -96,7 +98,7 @@ export default function ItemForm({ action, categories, item, cancelHref }: Props
       </label>
 
       <label className="block">
-        <span className="text-sm font-semibold">Category</span>
+        <span className="text-sm font-bold text-ink">Category</span>
         <select
           name="category_id"
           value={categoryChoice}
@@ -126,7 +128,7 @@ export default function ItemForm({ action, categories, item, cancelHref }: Props
 
       <div className="grid grid-cols-2 gap-4">
         <label className="block">
-          <span className="text-sm font-semibold">Quantity</span>
+          <span className="text-sm font-bold text-ink">Quantity</span>
           <input
             name="quantity"
             type="number"
@@ -139,14 +141,14 @@ export default function ItemForm({ action, categories, item, cancelHref }: Props
           <FieldError field="quantity" errors={errors} />
         </label>
         <label className="block">
-          <span className="text-sm font-semibold">Unit</span>
+          <span className="text-sm font-bold text-ink">Unit</span>
           <input name="unit" defaultValue={v.unit} className="input" placeholder="e.g. kg, cans" />
         </label>
       </div>
 
       <label className="block">
-        <span className="text-sm font-semibold">
-          Price ($) <span className="font-normal text-gray-500">optional</span>
+        <span className="text-sm font-bold text-ink">
+          Price ($) <span className="font-normal text-muted">optional</span>
         </span>
         <input
           name="price"
@@ -162,30 +164,30 @@ export default function ItemForm({ action, categories, item, cancelHref }: Props
 
       <div className="grid grid-cols-2 gap-4">
         <label className="block">
-          <span className="text-sm font-semibold">Purchased on</span>
+          <span className="text-sm font-bold text-ink">Purchased on</span>
           <input name="purchased_on" type="date" defaultValue={v.purchased_on} className="input" />
         </label>
         <label className="block">
-          <span className="text-sm font-semibold">Expires on</span>
+          <span className="text-sm font-bold text-ink">Expires on</span>
           <input name="expires_on" type="date" defaultValue={v.expires_on} className="input" />
         </label>
       </div>
 
-      <label className="flex items-center gap-2">
+      <label className="flex w-fit cursor-pointer items-center gap-2.5 rounded-xl bg-lavender px-4 py-3">
         <input
           name="in_stock"
           type="checkbox"
           defaultChecked={v.in_stock}
-          className="h-4 w-4 accent-primary"
+          className="h-5 w-5 accent-primary"
         />
-        <span className="text-sm font-semibold">In stock</span>
+        <span className="text-sm font-bold text-ink">In stock</span>
       </label>
 
-      <div className="flex gap-3">
-        <button type="submit" disabled={pending} className="btn">
+      <div className="flex gap-3 border-t border-lavender-200 pt-5">
+        <button type="submit" disabled={pending} className={buttonClass("primary")}>
           {pending ? "Saving…" : item ? "Save changes" : "Add item"}
         </button>
-        <Link href={cancelHref} className="btn-outline py-2">
+        <Link href={cancelHref} className={buttonClass("secondary")}>
           Cancel
         </Link>
       </div>

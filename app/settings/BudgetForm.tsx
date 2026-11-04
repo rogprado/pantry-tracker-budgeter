@@ -1,6 +1,8 @@
 "use client";
 
+import { Check, PiggyBank } from "lucide-react";
 import { useActionState } from "react";
+import { Button, Field, Input } from "@/app/components/ui";
 import { saveBudget } from "@/app/settings/actions";
 
 export default function BudgetForm({ current }: { current: number | null }) {
@@ -8,28 +10,36 @@ export default function BudgetForm({ current }: { current: number | null }) {
   const value = state?.value ?? (current === null ? "" : String(current));
 
   return (
-    <form action={formAction} noValidate className="card space-y-4">
-      <label className="block">
-        <span className="text-sm font-semibold">Monthly grocery budget ($)</span>
-        <input
+    <form action={formAction} noValidate className="space-y-5 rounded-card border border-lavender-200/70 bg-white p-8 shadow-card">
+      <div className="flex items-start gap-3">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-lavender-200/70 text-plum">
+          <PiggyBank size={20} aria-hidden="true" />
+        </span>
+        <div>
+          <h2 className="font-display text-xl font-semibold text-eggplant">Monthly grocery budget</h2>
+          <p className="text-sm text-muted">We use it for the budget bar and to keep your shopping list in check.</p>
+        </div>
+      </div>
+      <Field label="Amount per month ($)" error={state?.error} help="Leave blank for no budget.">
+        <Input
           key={value}
           name="monthly_budget"
           inputMode="decimal"
           defaultValue={value}
           placeholder="e.g. 300"
-          className={`input ${state?.error ? "border-danger" : ""}`}
-          aria-invalid={state?.error ? true : undefined}
-          aria-describedby="budget-help"
+          invalid={Boolean(state?.error)}
+          className="max-w-xs"
         />
-        <span id="budget-help" className={`mt-1 block text-sm ${state?.error ? "text-danger" : "text-gray-500"}`}>
-          {state?.error ?? "Leave blank for no budget."}
-        </span>
-      </label>
-      <div className="flex items-center gap-3">
-        <button type="submit" disabled={pending} className="btn">
+      </Field>
+      <div className="flex items-center gap-3 border-t border-lavender-200 pt-5">
+        <Button type="submit" disabled={pending}>
           {pending ? "Saving…" : "Save budget"}
-        </button>
-        {state?.saved && !pending && <span className="text-sm font-semibold text-heading">Saved ✓</span>}
+        </Button>
+        {state?.saved && !pending && (
+          <span className="flex items-center gap-1.5 text-base font-bold text-fresh-ink" role="status">
+            <Check size={18} aria-hidden="true" /> Saved
+          </span>
+        )}
       </div>
     </form>
   );

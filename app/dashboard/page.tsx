@@ -1,6 +1,7 @@
 import { CalendarClock, ChartColumn, Package, Refrigerator, Wallet } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import produceOnWhite from "@/public/images/produce-on-white.jpg";
 import BudgetBar from "@/app/components/BudgetBar";
 import { ButtonLink, Card, CardTitle, CategoryIcon, EmptyState, FreshnessPill, PageHeader, StatCard } from "@/app/components/ui";
 import PeriodFilter from "@/app/dashboard/PeriodFilter";
@@ -45,7 +46,13 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
 
   return (
     <div className="space-y-8">
-      <PageHeader eyebrow="Dashboard" title="How's your kitchen?" subtitle="What to use up first, what you have, and where the grocery money went." />
+      <PageHeader
+        eyebrow="Dashboard"
+        title="How's your kitchen?"
+        subtitle="What to use up first, what you have, and where the grocery money went."
+        image={produceOnWhite}
+        imageAlt="Strawberries, grapefruit and rhubarb on a white counter"
+      />
 
       {/* Use it soon: the card to look at first */}
       <Card tone="highlight">
