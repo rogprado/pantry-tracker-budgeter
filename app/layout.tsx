@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Newsreader } from "next/font/google";
 import { Suspense } from "react";
 import Sidebar from "@/app/components/Sidebar";
+import Toaster from "@/app/components/Toaster";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"], axes: ["opsz"] });
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Suspense fallback={<p className="text-muted">Loading…</p>}>{children}</Suspense>
           </div>
         </main>
+        <Toaster />
       </body>
     </html>
   );
