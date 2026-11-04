@@ -59,3 +59,45 @@ export function spendingByCategory(items: StatItem[], today: string): CategorySp
     .map(([category, total]) => ({ category, total: roundCents(total) }))
     .sort((a, b) => b.total - a.total || a.category.localeCompare(b.category));
 }
+
+export type PeriodSpend = { label: string; start: string; end: string; total: number };
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const shortDate = (date: string) => `${MONTHS[Number(date.slice(5, 7)) - 1]} ${Number(date.slice(8, 10))}`;
+
+// Sum of prices of items purchased between start and end (inclusive).
+function spentBetween(items: StatItem[], start: string, end: string): number {
+  return roundCents(
+    items
+      .filter((i) => i.purchased_on !== null && i.purchased_on >= start && i.purchased_on <= end)
+      .reduce((sum, i) => sum + Number(i.price ?? 0), 0),
+  );
+}
+
+// Monday of the week that contains date.
+export function weekStart(date: string): string {
+  const day = new Date(`${date}T00:00:00Z`).getUTCDay(); // 0 = Sunday
+  return addDays(date, -((day + 6) % 7));
+}
+
+// One entry per day of today's calendar month (days with no spending are $0).
+// The daily totals add up to spentThisMonth.
+export function spendingByDay(items: StatItem[], today: string): PeriodSpend[] {
+  const days: PeriodSpend[] = [];
+  for (let d = `${today.slice(0, 7)}-01`; d.slice(0, 7) === today.slice(0, 7); d = addDays(d, 1)) {
+    days.push({ label: String(Number(d.slice(8, 10))), start: d, end: d, total: spentBetween(items, d, d) });
+  }
+  return days;
+}
+
+// The last `weeks` weeks (Monday to Sunday), oldest first, ending with the current week.
+export function spendingByWeek(items: StatItem[], today: string, weeks = 8): PeriodSpend[] {
+  const current = weekStart(today);
+  const result: PeriodSpend[] = [];
+  for (let k = weeks - 1; k >= 0; k--) {
+    const start = addDays(current, -7 * k);
+    const end = addDays(start, 6);
+    result.push({ label: shortDate(start), start, end, total: spentBetween(items, start, end) });
+  }
+  return result;
+}

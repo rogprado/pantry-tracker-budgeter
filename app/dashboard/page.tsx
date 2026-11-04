@@ -2,8 +2,17 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import SpendingChart from "@/app/dashboard/SpendingChart";
+import SpendingOverTime from "@/app/dashboard/SpendingOverTime";
 import { listStatItems } from "@/lib/pantry";
-import { expiringSoon, itemsInStock, spendingByCategory, spentThisMonth, todayInTimeZone } from "@/lib/stats";
+import {
+  expiringSoon,
+  itemsInStock,
+  spendingByCategory,
+  spendingByDay,
+  spendingByWeek,
+  spentThisMonth,
+  todayInTimeZone,
+} from "@/lib/stats";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -57,6 +66,8 @@ export default async function DashboardPage() {
           </div>
         )}
       </section>
+
+      <SpendingOverTime byDay={spendingByDay(items, today)} byWeek={spendingByWeek(items, today)} month={month} />
     </div>
   );
 }
