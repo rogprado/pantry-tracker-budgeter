@@ -7,7 +7,7 @@ import { saveRecipe } from "@/app/recipes/actions";
 // The "What can I cook?" button and the suggested recipe cards.
 export default function RecipeSuggester() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ message: string; code?: string } | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function suggest() {
@@ -17,12 +17,16 @@ export default function RecipeSuggester() {
       const res = await fetch("/api/recipes/suggest", { method: "POST" });
       const body = await res.json().catch(() => ({}));
       if (!res.ok || !Array.isArray(body.recipes)) {
-        setError(body.error ?? "We couldn't get recipe ideas right now. Please try again in a moment.");
+        setError({
+          message: body.error ?? "We couldn't get recipe ideas right now. Please try again in a moment.",
+          // No code in the body means the server didn't answer with our JSON (e.g. a hosting timeout).
+          code: body.code ?? `http_${res.status}`,
+        });
       } else {
         setRecipes(body.recipes);
       }
     } catch {
-      setError("We couldn't reach the server. Check your connection and try again.");
+      setError({ message: "We couldn't reach the server. Check your connection and try again.", code: "network" });
     } finally {
       setLoading(false);
     }
@@ -40,7 +44,8 @@ export default function RecipeSuggester() {
       {loading && <p className="text-sm text-gray-500">Asking Claude about your pantry. This takes about 10 seconds.</p>}
       {error && (
         <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-danger">
-          {error}
+          {error.message}
+          {error.code && <span className="ml-2 text-xs opacity-70">(code: {error.code})</span>}
         </p>
       )}
 
