@@ -2,56 +2,67 @@
 
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { PeriodSpend } from "@/lib/stats";
+import type { Grouping, PeriodSpend } from "@/lib/stats";
 
 const money = (n: number) => `$${n.toFixed(2)}`;
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const longDate = (d: string) => `${MONTHS[Number(d.slice(5, 7)) - 1]} ${Number(d.slice(8, 10))}`;
+const longDate = (d: string) => `${MONTHS[Number(d.slice(5, 7)) - 1]} ${Number(d.slice(8, 10))}, ${d.slice(0, 4)}`;
+const GROUPINGS: Grouping[] = ["day", "week", "month"];
 
-// Columns of spending per day (this month) or per week (last 8 weeks).
-// Both series come from the server; the toggle only switches which one is drawn, so there's no reload.
-export default function SpendingOverTime({ byDay, byWeek, month }: { byDay: PeriodSpend[]; byWeek: PeriodSpend[]; month: string }) {
-  const [view, setView] = useState<"day" | "week">("day");
-  const data = view === "day" ? byDay : byWeek;
+// Columns of spending per day, week or month across the chosen period.
+// All three series come from the server; the toggle only switches which one is drawn, so there's no reload.
+export default function SpendingOverTime({
+  series,
+  initialGrouping,
+  periodLabel,
+}: {
+  series: Record<Grouping, PeriodSpend[]>;
+  initialGrouping: Grouping;
+  periodLabel: string;
+}) {
+  const [grouping, setGrouping] = useState<Grouping>(initialGrouping);
+  const data = series[grouping];
   const total = data.reduce((s, d) => s + d.total, 0);
-  const caption = view === "day" ? `Each day in ${month}` : "Each week (Monday to Sunday), last 8 weeks";
+  // Show about 12 axis labels at most; the tooltip has every value.
+  const interval = Math.max(0, Math.ceil(data.length / 12) - 1);
 
   return (
     <section className="card">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="font-bold text-heading">Spending over time</h2>
         <div role="group" aria-label="Group spending by" className="flex rounded-xl bg-lavender p-1 text-sm font-semibold">
-          {(["day", "week"] as const).map((v) => (
+          {GROUPINGS.map((g) => (
             <button
-              key={v}
+              key={g}
               type="button"
-              aria-pressed={view === v}
-              onClick={() => setView(v)}
-              className={`rounded-lg px-3 py-1 ${view === v ? "bg-white text-heading shadow-sm" : "text-gray-600"}`}
+              aria-pressed={grouping === g}
+              onClick={() => setGrouping(g)}
+              className={`rounded-lg px-3 py-1 ${grouping === g ? "bg-white text-heading shadow-sm" : "text-gray-600"}`}
             >
-              By {v}
+              By {g}
             </button>
           ))}
         </div>
       </div>
       <p className="mt-1 text-sm text-gray-600">
-        {caption} · {money(total)} total
+        {periodLabel} · {money(total)} total{grouping === "week" && " · weeks run Monday to Sunday"}
       </p>
 
       <div
         className="mt-4 h-56"
         role="img"
-        aria-label={`Spending by ${view}: ${data.filter((d) => d.total > 0).map((d) => `${d.label} ${money(d.total)}`).join(", ") || "no spending"}`}
+        aria-label={`Spending by ${grouping}: ${data.filter((d) => d.total > 0).map((d) => `${d.label} ${money(d.total)}`).join(", ") || "no spending"}`}
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid vertical={false} stroke="#ece9f5" />
             <XAxis
-              dataKey="label"
+              dataKey="start"
+              tickFormatter={(_, index) => data[index]?.label ?? ""}
               tickLine={false}
               axisLine={{ stroke: "#d4d0e0" }}
               tick={{ fill: "#4b4660", fontSize: 12 }}
-              interval={view === "day" ? 4 : 0}
+              interval={interval}
             />
             <YAxis
               width={48}

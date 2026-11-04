@@ -20,3 +20,11 @@ Can you create a dashboard showing spend per day or week as well below categorie
 
 ### Summary
 Added a "Spending over time" column chart below the category chart, with a By day / By week toggle: by day shows every day of this month (the days add up to the "Spent" card), by week shows the last 8 Monday-to-Sunday weeks. Both series are pure functions in `lib/stats.ts` (`spendingByDay`, `spendingByWeek`, `weekStart`) computed on the server; the toggle only switches which one is drawn in the browser, so there is no navigation or reload (avoiding the kind of change I had to revert in feature 6). Checked with a throwaway script (daily sum = $20 for the PLAN.md data, week boundaries on Sunday/Monday, leap February); types, lint and build pass. Not seen rendered while logged in.
+
+## 2026-11-03 (follow-up 2)
+
+We also need a filter to chose to see per year, all time or the specified month(s) (you can select multiple months)
+
+### Summary
+Added a Period filter at the top of the dashboard: This month (default), Choose months (tick any number), Year, or All time. It is a plain GET form with an Apply button (full page load, like the pantry filters), so the choice lives in the URL. "Spent", the category chart and the over-time chart follow the period; "Items in stock now" and "Expiring in the next 7 days" stay about today. The over-time chart now offers By day / week / month across the whole period and picks a sensible default (one month → day, several months → week, year or all time → month).
+Rewrote `lib/stats.ts` around a `Period` type (`parsePeriod`, `periodLabel`, `spentInPeriod`, `spendingByCategory`, `spendingOverTime`, ...) and kept `spentThisMonth` for the PLAN.md test. Checked with a throwaway script that every grouping adds up to the "Spent" total for each period and that invalid URL values fall back to this month; fixed all-time month labels that read like dates ("Dec 25" → "Dec '25"). Types, lint and build pass; not seen rendered while logged in.

@@ -10,7 +10,7 @@ export default function SpendingChart({ data }: { data: CategorySpend[] }) {
   const height = Math.max(120, data.length * 40 + 20);
 
   return (
-    <div style={{ height }} role="img" aria-label={`Spending by category this month: ${data.map((d) => `${d.category} ${money(d.total)}`).join(", ")}`}>
+    <div style={{ height }} role="img" aria-label={`Spending by category: ${data.map((d) => `${d.category} ${money(d.total)}`).join(", ")}`}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} layout="vertical" margin={{ top: 0, right: 64, bottom: 0, left: 0 }}>
           <XAxis type="number" hide domain={[0, "dataMax"]} />
