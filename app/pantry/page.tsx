@@ -1,4 +1,4 @@
-import { Plus, Refrigerator, SearchX } from "lucide-react";
+import { FileSpreadsheet, Plus, Refrigerator, SearchX } from "lucide-react";
 import { redirect } from "next/navigation";
 import FilterBar from "@/app/pantry/FilterBar";
 import { Shelves } from "@/app/pantry/ItemList";
@@ -30,9 +30,14 @@ export default async function PantryPage({ searchParams }: PageProps<"/pantry">)
             : "Everything on your shelves, in the fridge and in the freezer."
         }
         actions={
-          <ButtonLink href="/pantry/new" icon={<Plus size={18} aria-hidden="true" />}>
-            Add item
-          </ButtonLink>
+          <>
+            <ButtonLink href="/pantry/import" variant="secondary" icon={<FileSpreadsheet size={18} aria-hidden="true" />}>
+              Import
+            </ButtonLink>
+            <ButtonLink href="/pantry/new" icon={<Plus size={18} aria-hidden="true" />}>
+              Add item
+            </ButtonLink>
+          </>
         }
       />
 
@@ -51,7 +56,12 @@ export default async function PantryPage({ searchParams }: PageProps<"/pantry">)
             icon={<Refrigerator size={26} aria-hidden="true" />}
             title="Your shelves are empty"
             body="Add what's in your fridge and cupboards, and we'll suggest recipes and keep track of what to use first."
-            action={<ButtonLink href="/pantry/new" icon={<Plus size={18} aria-hidden="true" />}>Add your first item</ButtonLink>}
+            action={
+              <div className="flex flex-wrap justify-center gap-3">
+                <ButtonLink href="/pantry/new" icon={<Plus size={18} aria-hidden="true" />}>Add your first item</ButtonLink>
+                <ButtonLink href="/pantry/import" variant="secondary" icon={<FileSpreadsheet size={18} aria-hidden="true" />}>Import a spreadsheet</ButtonLink>
+              </div>
+            }
           />
         )
       ) : (
