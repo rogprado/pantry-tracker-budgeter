@@ -6,7 +6,7 @@ import { buttonClass } from "@/app/components/ui/Button";
 import { SORTS, type ItemFilters } from "@/lib/filters";
 import type { Category } from "@/lib/pantry";
 
-const select = "rounded-xl border border-lavender-300 bg-white px-3 py-2.5 text-base text-ink outline-none focus:border-primary focus:ring-4 focus:ring-primary/15";
+const select = "rounded-lg border border-lavender-300 bg-white px-3 py-2.5 text-base text-ink outline-none focus:border-primary focus:ring-4 focus:ring-primary/15";
 
 // A plain GET form, so every choice ends up in the URL (?q=&category=&stock=&sort=).
 // Dropdowns apply as soon as they change; search applies on Enter or "Search".
@@ -15,7 +15,7 @@ export default function FilterBar({ filters, categories }: { filters: ItemFilter
   const active = Boolean(filters.q || filters.category || filters.stock || filters.sort);
 
   return (
-    <form action="/pantry" className="rounded-card border border-lavender-200/70 bg-white p-4 shadow-card">
+    <form action="/pantry" className="rounded-card border border-lavender-200 bg-white p-4">
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-[220px] flex-1">
           <Search size={18} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted" aria-hidden="true" />
@@ -54,7 +54,7 @@ export default function FilterBar({ filters, categories }: { filters: ItemFilter
       </div>
       {active && (
         <div className="mt-3 text-right">
-          <Link href="/pantry" className="text-sm font-bold text-plum hover:text-eggplant">
+          <Link href="/pantry" className="text-sm font-semibold text-plum hover:text-eggplant">
             Clear all filters
           </Link>
         </div>

@@ -19,16 +19,16 @@ export default function SpendingChart({ data }: { data: CategorySpend[] }) {
             dataKey="category"
             width={110}
             tickLine={false}
-            axisLine={{ stroke: "#ddd2ef" }}
-            tick={{ fill: "#5e5568", fontSize: 13 }}
+            axisLine={{ stroke: "#d9d1e4" }}
+            tick={{ fill: "#5f5868", fontSize: 13 }}
           />
           <Tooltip
-            cursor={{ fill: "#f7f4fc" }}
+            cursor={{ fill: "#f8f6fb" }}
             formatter={(value) => [money(Number(value)), "Spent"]}
-            contentStyle={{ borderRadius: 12, border: "1px solid #ece5f7", fontSize: 13 }}
+            contentStyle={{ borderRadius: 12, border: "1px solid #ebe6f2", fontSize: 13 }}
           />
-          <Bar dataKey="total" fill="#7c4ddb" barSize={20} radius={[0, 4, 4, 0]} isAnimationActive={false}>
-            <LabelList dataKey="total" position="right" formatter={(v) => money(Number(v))} fill="#2b2233" fontSize={13} />
+          <Bar dataKey="total" fill="#6e3a8c" barSize={20} radius={[0, 4, 4, 0]} isAnimationActive={false}>
+            <LabelList dataKey="total" position="right" formatter={(v) => money(Number(v))} fill="#1f1a24" fontSize={13} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>

@@ -33,16 +33,16 @@ export default function PeriodFilter({
   ];
 
   return (
-    <form method="get" action="/dashboard" className="rounded-card border border-lavender-200/70 bg-white p-4 shadow-card">
+    <form method="get" action="/dashboard" className="rounded-card border border-lavender-200 bg-white p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <fieldset className="flex flex-wrap items-center gap-3">
           <legend className="sr-only">Period</legend>
-          <span className="text-sm font-bold text-ink">Period</span>
-          <div className="flex flex-wrap rounded-xl bg-lavender p-1">
+          <span className="text-sm font-semibold text-ink">Period</span>
+          <div className="flex flex-wrap rounded-lg bg-lavender p-1">
             {options.map(([value, label]) => (
               <label
                 key={value}
-                className="flex cursor-pointer items-center rounded-lg px-3 py-1.5 text-sm font-bold text-muted transition hover:text-eggplant has-[:checked]:bg-white has-[:checked]:text-eggplant has-[:checked]:shadow-sm has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-primary/25"
+                className="flex cursor-pointer items-center rounded-lg px-3 py-1.5 text-sm font-semibold text-muted transition hover:text-eggplant has-[:checked]:bg-white has-[:checked]:text-eggplant has-[:checked]:shadow-sm has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-primary/25"
               >
                 <input
                   type="radio"
@@ -59,9 +59,9 @@ export default function PeriodFilter({
         </fieldset>
 
         {choice === "year" && (
-          <label className="flex items-center gap-2 text-sm font-bold">
+          <label className="flex items-center gap-2 text-sm font-semibold">
             <span>Year</span>
-            <select name="year" defaultValue={selectedYear} className="rounded-xl border border-lavender-300 bg-white px-3 py-2 text-base">
+            <select name="year" defaultValue={selectedYear} className="rounded-lg border border-lavender-300 bg-white px-3 py-2 text-base">
               {years.map((y) => (
                 <option key={y} value={y}>
                   {y}

@@ -5,16 +5,17 @@
   /* Brand: purple as a food color */
   --color-eggplant: #3b1a4a; /* headings, brand */
   --color-plum: #6e3a8c; /* links, active navigation */
-  --color-primary: #7c4ddb; /* buttons */
-  --color-primary-strong: #6d3fd0; /* button hover */
+  --color-primary: #5b2d8a; /* the one main action per screen */
+  --color-primary-strong: #4a2273; /* button hover */
   --color-heading: #3b1a4a;
 
   /* Surfaces: a well-lit kitchen */
-  --color-lavender: #f7f4fc; /* page background */
-  --color-lavender-200: #ece5f7; /* borders, dividers, soft fills */
-  --color-lavender-300: #ddd2ef;
-  --color-ink: #2b2233; /* body text */
-  --color-muted: #5e5568; /* secondary text (7:1 on white) */
+  --color-lavender: #f8f6fb; /* subtle tint: hover, inset panels */
+  --color-lavender-200: #ebe6f2; /* hairline borders, dividers */
+  --color-lavender-300: #d9d1e4; /* input borders */
+  --color-canvas: #fcfbfd; /* page background: almost white */
+  --color-ink: #1f1a24; /* body text */
+  --color-muted: #5f5868; /* secondary text (7:1 on white) */
 
   /* Status accents, used only for status and always with a word or icon */
   --color-fresh: #2e8b57; /* herb green: fresh, in stock, under budget */
@@ -30,9 +31,9 @@
   --color-warning: #d4880f;
   --color-danger: #b3261e;
 
-  /* Type: Nunito for reading, soft Fraunces for titles and big numbers */
-  --font-sans: var(--font-nunito), system-ui, sans-serif;
-  --font-display: var(--font-fraunces), Georgia, serif;
+  /* Type: Inter for reading, Newsreader (an editorial serif) for titles and big numbers */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-newsreader), Georgia, serif;
   --text-xs: 0.8125rem; /* 13px: pills and tiny labels only */
   --text-xs--line-height: 1.25rem;
   --text-sm: 0.9375rem; /* 15px: the smallest body text */
@@ -40,36 +41,37 @@
   --text-base: 1rem;
 
   /* Shape */
-  --radius-card: 1.25rem;
-  --shadow-card: 0 1px 2px rgb(59 26 74 / 0.05), 0 10px 30px -14px rgb(59 26 74 / 0.18);
-  --shadow-lift: 0 2px 4px rgb(59 26 74 / 0.06), 0 16px 40px -16px rgb(59 26 74 / 0.28);
+  --radius-card: 0.75rem;
+  --shadow-card: 0 1px 2px rgb(31 26 36 / 0.04);
+  --shadow-lift: 0 1px 2px rgb(31 26 36 / 0.05), 0 8px 24px -12px rgb(31 26 36 / 0.16);
 }
 
 body {
-  background: var(--color-lavender);
+  background: var(--color-canvas);
   color: var(--color-ink);
   font-size: 1rem;
+  font-feature-settings: "cv11", "ss01"; /* Inter: single-storey a, open digits */
 }
 
-/* Soft, rounded Fraunces for titles and big numbers */
+/* Editorial serif for titles and big numbers */
 .font-display {
   font-family: var(--font-display);
-  font-variation-settings: "SOFT" 100, "WONK" 0;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  font-feature-settings: "lnum"; /* lining figures for prices */
 }
 
 @layer components {
   /* Kept so any markup still using these names matches the new look; new code uses app/components/ui. */
   .card {
-    @apply rounded-card border border-lavender-200/70 bg-white p-6 shadow-card;
+    @apply rounded-card border border-lavender-200 bg-white p-6;
   }
   .input {
-    @apply mt-1.5 block w-full rounded-xl border border-lavender-300 bg-white px-3.5 py-2.5 text-base text-ink outline-none transition placeholder:text-muted/70 focus:border-primary focus:ring-4 focus:ring-primary/15;
+    @apply mt-1.5 block w-full rounded-lg border border-lavender-300 bg-white px-3 py-2.5 text-base text-ink outline-none transition placeholder:text-muted/70 focus:border-primary focus:ring-4 focus:ring-primary/10;
   }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 font-bold text-white shadow-sm transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 font-semibold text-white transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60;
   }
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-lavender-300 bg-white px-4 py-2 font-bold text-plum transition hover:border-plum/40 hover:bg-lavender;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-lavender-300 bg-white px-4 py-2 font-semibold text-ink transition hover:bg-lavender;
   }
 }

@@ -35,13 +35,13 @@ export default function RecipeSuggester() {
 
   return (
     <section className="space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-card border border-lavender-200/70 bg-white p-6 shadow-card">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-card border border-lavender-200 bg-white p-6">
         <div className="flex items-center gap-3">
-          <span className="grid h-11 w-11 place-items-center rounded-2xl bg-lavender-200/70 text-plum">
+          <span className="shrink-0 text-plum">
             <Sparkles size={22} aria-hidden="true" />
           </span>
           <div>
-            <h2 className="font-display text-xl font-semibold text-eggplant">Fresh ideas from your shelves</h2>
+            <h2 className="font-display text-xl font-medium text-eggplant">Fresh ideas from your shelves</h2>
             <p className="text-sm text-muted">3–5 recipes that use what you have, starting with what needs using up.</p>
           </div>
         </div>
@@ -56,7 +56,7 @@ export default function RecipeSuggester() {
         </p>
       )}
       {error && (
-        <p role="alert" className="rounded-xl bg-expired-soft px-4 py-3 text-base font-semibold text-expired-ink">
+        <p role="alert" className="rounded-lg bg-expired-soft px-4 py-3 text-base font-semibold text-expired-ink">
           {error.message}
           {error.code && <span className="ml-2 text-xs font-normal opacity-80">(code: {error.code})</span>}
         </p>
@@ -89,14 +89,14 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
     });
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-card border border-lavender-200/70 bg-white shadow-card">
+    <article className="flex flex-col overflow-hidden rounded-card border border-lavender-200 bg-white">
       {/* index-card top rule */}
       <div className="h-2 bg-primary/80" aria-hidden="true" />
       <div className="flex flex-1 flex-col gap-4 p-6">
         <header className="flex items-start justify-between gap-3">
           <div>
-            <h3 className="font-display text-2xl font-semibold text-eggplant">{recipe.title}</h3>
-            <p className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm font-bold text-muted">
+            <h3 className="font-display text-2xl font-medium text-eggplant">{recipe.title}</h3>
+            <p className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold text-muted">
               {recipe.minutes > 0 && (
                 <span className="flex items-center gap-1.5">
                   <Clock size={16} aria-hidden="true" /> {recipe.minutes} min
@@ -115,13 +115,13 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
         </header>
 
         <div className="space-y-2">
-          <p className="flex items-center gap-2 text-base font-bold text-fresh-ink">
+          <p className="flex items-center gap-2 text-base font-semibold text-fresh-ink">
             <CircleCheck size={18} aria-hidden="true" />
             You have {have} of {recipe.ingredients.length}
           </p>
           {missing.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-sm font-bold text-muted">To buy:</span>
+              <span className="text-sm font-semibold text-muted">To buy:</span>
               {missing.map((i) => (
                 <span key={i.name} className="inline-flex items-center gap-1 rounded-full bg-lavender-200/70 px-2.5 py-0.5 text-sm font-semibold text-eggplant">
                   <ShoppingBasket size={14} aria-hidden="true" /> {i.name}
@@ -131,7 +131,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
           )}
           {recipe.uses_expiring.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-sm font-bold text-muted">Uses up:</span>
+              <span className="text-sm font-semibold text-muted">Uses up:</span>
               {recipe.uses_expiring.map((n) => (
                 <StatusPill key={n} tone="soon">
                   {n}
@@ -141,13 +141,13 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
           )}
         </div>
 
-        <details className="group rounded-2xl bg-lavender p-4">
-          <summary className="cursor-pointer text-sm font-bold text-plum group-open:mb-3">Ingredients and method</summary>
+        <details className="group rounded-lg bg-lavender p-4">
+          <summary className="cursor-pointer text-sm font-semibold text-plum group-open:mb-3">Ingredients and method</summary>
           <ul className="mb-3 grid gap-x-4 gap-y-0.5 text-sm sm:grid-cols-2">
             {recipe.ingredients.map((i, n) => (
               <li key={n} className={i.in_pantry ? "text-ink" : "text-muted"}>
                 {i.amount} {i.name}
-                {!i.in_pantry && <span className="text-xs font-bold"> (to buy)</span>}
+                {!i.in_pantry && <span className="text-xs font-semibold"> (to buy)</span>}
               </li>
             ))}
           </ul>

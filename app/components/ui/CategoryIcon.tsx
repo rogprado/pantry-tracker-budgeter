@@ -34,11 +34,11 @@ export function categoryIcon(name: string | null | undefined): LucideIcon {
 }
 
 export function CategoryIcon({ name, size = "md" }: { name: string | null | undefined; size?: "sm" | "md" | "lg" }) {
-  const box = { sm: "h-8 w-8 rounded-lg", md: "h-10 w-10 rounded-xl", lg: "h-12 w-12 rounded-2xl" }[size];
-  const px = { sm: 16, md: 20, lg: 24 }[size];
+  const box = { sm: "h-8 w-8 rounded-md", md: "h-9 w-9 rounded-lg", lg: "h-12 w-12 rounded-xl" }[size];
+  const px = { sm: 16, md: 18, lg: 22 }[size];
   return (
-    <span className={`grid shrink-0 place-items-center bg-lavender-200/70 text-plum ${box}`} aria-hidden="true">
-      {createElement(categoryIcon(name), { size: px, strokeWidth: 2 })}
+    <span className={`grid shrink-0 place-items-center border border-lavender-200 bg-white text-plum ${box}`} aria-hidden="true">
+      {createElement(categoryIcon(name), { size: px, strokeWidth: 1.75 })}
     </span>
   );
 }

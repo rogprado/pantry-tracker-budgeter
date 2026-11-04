@@ -28,15 +28,15 @@ export default function SpendingOverTime({
   // Recharts drops labels that would overlap (the tooltip has every value).
 
   return (
-    <section className="rounded-card border border-lavender-200/70 bg-white p-6 shadow-card">
+    <section className="rounded-card border border-lavender-200 bg-white p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-lavender-200/70 text-plum">
+          <span className="shrink-0 text-plum">
             <CalendarDays size={20} aria-hidden="true" />
           </span>
-          <h2 className="font-display text-xl font-semibold text-eggplant">Over time</h2>
+          <h2 className="font-display text-xl font-medium text-eggplant">Over time</h2>
         </div>
-        <div role="group" aria-label="Group spending by" className="flex rounded-xl bg-lavender p-1 text-sm font-bold">
+        <div role="group" aria-label="Group spending by" className="flex rounded-lg bg-lavender p-1 text-sm font-semibold">
           {GROUPINGS.map((g) => (
             <button
               key={g}
@@ -61,15 +61,15 @@ export default function SpendingOverTime({
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-            <CartesianGrid vertical={false} stroke="#ece5f7" />
+            <CartesianGrid vertical={false} stroke="#ebe6f2" />
             <XAxis
               dataKey="start"
               // Look the label up by the bucket's start date. Recharts' tick index counts only the
               // ticks it shows, not the data, so using it put labels on the wrong bars.
               tickFormatter={(start) => labels.get(String(start)) ?? ""}
               tickLine={false}
-              axisLine={{ stroke: "#ddd2ef" }}
-              tick={{ fill: "#5e5568", fontSize: 12 }}
+              axisLine={{ stroke: "#d9d1e4" }}
+              tick={{ fill: "#5f5868", fontSize: 12 }}
               interval="preserveStartEnd"
               minTickGap={16}
             />
@@ -77,21 +77,21 @@ export default function SpendingOverTime({
               width={48}
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "#5e5568", fontSize: 12 }}
+              tick={{ fill: "#5f5868", fontSize: 12 }}
               tickFormatter={(v) => `$${v}`}
               allowDecimals={false}
             />
             <Tooltip
-              cursor={{ fill: "#f7f4fc" }}
+              cursor={{ fill: "#f8f6fb" }}
               labelFormatter={(_, payload) => {
                 const p = payload?.[0]?.payload as PeriodSpend | undefined;
                 if (!p) return "";
                 return p.start === p.end ? longDate(p.start) : `${longDate(p.start)} – ${longDate(p.end)}`;
               }}
               formatter={(value) => [money(Number(value)), "Spent"]}
-              contentStyle={{ borderRadius: 12, border: "1px solid #ece5f7", fontSize: 13 }}
+              contentStyle={{ borderRadius: 12, border: "1px solid #ebe6f2", fontSize: 13 }}
             />
-            <Bar dataKey="total" fill="#7c4ddb" maxBarSize={24} radius={[4, 4, 0, 0]} isAnimationActive={false} />
+            <Bar dataKey="total" fill="#6e3a8c" maxBarSize={24} radius={[4, 4, 0, 0]} isAnimationActive={false} />
           </BarChart>
         </ResponsiveContainer>
       </div>

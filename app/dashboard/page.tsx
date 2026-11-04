@@ -68,10 +68,10 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
           <ul className="grid gap-3 sm:grid-cols-2">
             {soon.slice(0, 6).map((i) => (
               <li key={i.id}>
-                <Link href={`/pantry/${i.id}`} className="flex items-center gap-3 rounded-xl bg-white/80 p-3 transition hover:bg-white hover:shadow-card">
+                <Link href={`/pantry/${i.id}`} className="flex items-center gap-3 rounded-lg bg-white/80 p-3 transition hover:bg-white hover:shadow-card">
                   <CategoryIcon name={i.categories?.name} size="sm" />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate font-bold text-ink">{i.name}</span>
+                    <span className="block truncate font-semibold text-ink">{i.name}</span>
                     <span className="block text-sm text-muted">{formatQuantity(i)}</span>
                   </span>
                   <FreshnessPill expiresOn={i.expires_on} today={today} />
@@ -95,7 +95,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
       <section className="space-y-5">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 className="font-display text-3xl font-semibold text-eggplant">Where the money went</h2>
+            <h2 className="font-display text-3xl font-medium text-eggplant">Where the money went</h2>
             <p className="text-base text-muted">Showing {label}.</p>
           </div>
         </div>

@@ -29,11 +29,11 @@ export default function NavLinks() {
             key={href}
             href={href}
             aria-current={isActive ? "page" : undefined}
-            className={`flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 font-bold transition ${
-              isActive ? "bg-white text-eggplant shadow-card" : "text-muted hover:bg-white/60 hover:text-eggplant"
+            className={`flex shrink-0 items-center gap-3 rounded-lg px-3 py-2 text-[15px] font-medium transition ${
+              isActive ? "bg-lavender text-eggplant" : "text-muted hover:bg-lavender/70 hover:text-eggplant"
             }`}
           >
-            <Icon size={20} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-primary" : ""} aria-hidden="true" />
+            <Icon size={18} strokeWidth={isActive ? 2.25 : 1.75} className={isActive ? "text-plum" : ""} aria-hidden="true" />
             {label}
           </Link>
         );

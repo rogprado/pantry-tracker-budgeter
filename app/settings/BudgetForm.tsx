@@ -10,13 +10,13 @@ export default function BudgetForm({ current }: { current: number | null }) {
   const value = state?.value ?? (current === null ? "" : String(current));
 
   return (
-    <form action={formAction} noValidate className="space-y-5 rounded-card border border-lavender-200/70 bg-white p-8 shadow-card">
+    <form action={formAction} noValidate className="space-y-5 rounded-card border border-lavender-200 bg-white p-8">
       <div className="flex items-start gap-3">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-lavender-200/70 text-plum">
+        <span className="shrink-0 text-plum">
           <PiggyBank size={20} aria-hidden="true" />
         </span>
         <div>
-          <h2 className="font-display text-xl font-semibold text-eggplant">Monthly grocery budget</h2>
+          <h2 className="font-display text-xl font-medium text-eggplant">Monthly grocery budget</h2>
           <p className="text-sm text-muted">We use it for the budget bar and to keep your shopping list in check.</p>
         </div>
       </div>
@@ -36,7 +36,7 @@ export default function BudgetForm({ current }: { current: number | null }) {
           {pending ? "Saving…" : "Save budget"}
         </Button>
         {state?.saved && !pending && (
-          <span className="flex items-center gap-1.5 text-base font-bold text-fresh-ink" role="status">
+          <span className="flex items-center gap-1.5 text-base font-semibold text-fresh-ink" role="status">
             <Check size={18} aria-hidden="true" /> Saved
           </span>
         )}
