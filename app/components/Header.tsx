@@ -20,6 +20,7 @@ export default async function Header() {
               <Link href="/pantry" className="text-heading hover:text-primary">Pantry</Link>
               <Link href="/pantry/staples" className="text-heading hover:text-primary">Staples</Link>
               <Link href="/recipes" className="text-heading hover:text-primary">Recipes</Link>
+              <Link href="/shopping" className="text-heading hover:text-primary">Shopping</Link>
             </nav>
             <span className="hidden text-gray-600 sm:inline">{user.email}</span>
             <form action={logout}>
