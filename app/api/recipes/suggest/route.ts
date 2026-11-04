@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { NextResponse } from "next/server";
+import { CLAUDE_MODEL, claudeErrorResponse, jsonError } from "@/lib/claude";
 import { RECIPES_SYSTEM_PROMPT, buildRecipesUserMessage } from "@/lib/prompts/recipes";
 import { RecipesResponseSchema, cleanRecipes } from "@/lib/recipes";
 import { todayInTimeZone } from "@/lib/stats";
@@ -8,11 +9,8 @@ import { createClient } from "@/lib/supabase/server";
 
 export const maxDuration = 60; // seconds; Claude usually answers well within this
 
-const MODEL = "claude-sonnet-5-5";
 const TRY_AGAIN = "We couldn't get recipe ideas right now. Please try again in a moment.";
-
-// `code` is a short, non-secret reason shown in small print so problems can be diagnosed from the screen.
-const fail = (error: string, status: number, code: string) => NextResponse.json({ error, code }, { status });
+const fail = jsonError;
 
 // POST /api/recipes/suggest: sends my in-stock items to Claude and returns 3-5 checked recipes.
 export async function POST() {
@@ -36,7 +34,7 @@ export async function POST() {
   try {
     const client = new Anthropic();
     const response = await client.beta.messages.parse({
-      model: MODEL,
+      model: CLAUDE_MODEL,
       max_tokens: 16000,
       output_config: { effort: "medium", format: betaZodOutputFormat(RecipesResponseSchema) },
       // If a safety filter wrongly declines, Anthropic retries on its recommended fallback model.
@@ -62,23 +60,6 @@ export async function POST() {
     }
     return NextResponse.json({ recipes });
   } catch (err) {
-    let code = "unknown";
-    if (err instanceof Anthropic.AuthenticationError || err instanceof Anthropic.PermissionDeniedError) {
-      console.error("Anthropic rejected the API key", err.status, err.message);
-      code = `key_rejected_${err.status}`;
-    } else if (err instanceof Anthropic.RateLimitError) {
-      console.error("Anthropic rate limit", err.message);
-      return fail("Lots of requests right now. Please wait a minute and try again.", 429, "rate_limit");
-    } else if (err instanceof Anthropic.APIConnectionError) {
-      console.error("Could not reach Anthropic", err.message);
-      code = "connection";
-    } else if (err instanceof Anthropic.APIError) {
-      console.error("Anthropic API error", err.status, err.message);
-      code = `api_${err.status}`;
-    } else {
-      console.error("Recipe suggestion failed", err);
-      code = err instanceof Error ? `exception_${err.name}` : "unknown";
-    }
-    return fail(TRY_AGAIN, 502, code);
+    return claudeErrorResponse(err, "Recipe suggestion");
   }
 }
