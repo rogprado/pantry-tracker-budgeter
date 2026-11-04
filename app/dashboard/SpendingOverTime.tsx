@@ -23,6 +23,7 @@ export default function SpendingOverTime({
   const [grouping, setGrouping] = useState<Grouping>(initialGrouping);
   const data = series[grouping];
   const total = data.reduce((s, d) => s + d.total, 0);
+  const labels = new Map(data.map((d) => [d.start, d.label]));
   // Show about 12 axis labels at most; the tooltip has every value.
   const interval = Math.max(0, Math.ceil(data.length / 12) - 1);
 
@@ -58,7 +59,9 @@ export default function SpendingOverTime({
             <CartesianGrid vertical={false} stroke="#ece9f5" />
             <XAxis
               dataKey="start"
-              tickFormatter={(_, index) => data[index]?.label ?? ""}
+              // Look the label up by the bucket's start date. Recharts' tick index counts only the
+              // ticks it shows, not the data, so using it put labels on the wrong bars.
+              tickFormatter={(start) => labels.get(String(start)) ?? ""}
               tickLine={false}
               axisLine={{ stroke: "#d4d0e0" }}
               tick={{ fill: "#4b4660", fontSize: 12 }}

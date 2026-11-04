@@ -28,3 +28,10 @@ We also need a filter to chose to see per year, all time or the specified month(
 ### Summary
 Added a Period filter at the top of the dashboard: This month (default), Choose months (tick any number), Year, or All time. It is a plain GET form with an Apply button (full page load, like the pantry filters), so the choice lives in the URL. "Spent", the category chart and the over-time chart follow the period; "Items in stock now" and "Expiring in the next 7 days" stay about today. The over-time chart now offers By day / week / month across the whole period and picks a sensible default (one month → day, several months → week, year or all time → month).
 Rewrote `lib/stats.ts` around a `Period` type (`parsePeriod`, `periodLabel`, `spentInPeriod`, `spendingByCategory`, `spendingOverTime`, ...) and kept `spentThisMonth` for the PLAN.md test. Checked with a throwaway script that every grouping adds up to the "Spent" total for each period and that invalid URL values fall back to this month; fixed all-time month labels that read like dates ("Dec 25" → "Dec '25"). Types, lint and build pass; not seen rendered while logged in.
+
+## 2026-11-03 (follow-up 3)
+
+By day and By month is not working properly when looking at 2026. The X axis shows Dec to March while showing the November spending
+
+### Summary
+Bug was mine: the over-time chart's axis labels came from `data[index]`, but Recharts passes the index among the ticks it shows (after skipping some for space), not the data index, so labels drifted onto the wrong bars while the bars themselves were right. Now each label is looked up from the bar's own start date. This time I checked it visually: rendered the chart with sample numbers (no database) in headless Chrome for 2026 by day, week and month, and the March and November bars sit under the right labels. The temporary page was deleted before committing.
