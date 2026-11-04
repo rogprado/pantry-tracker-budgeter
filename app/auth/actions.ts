@@ -65,3 +65,22 @@ function friendly(message: string): string {
   if (m.includes("rate limit")) return "Too many tries. Please wait a minute and try again.";
   return "Something went wrong. Please try again.";
 }
+
+export type OAuthProvider = "google" | "github";
+
+// "Continue with Google / GitHub": Supabase gives us the provider's sign-in URL and we send the
+// browser there. The provider sends it back to /auth/callback, which finishes the login.
+export async function signInWithProvider(provider: OAuthProvider) {
+  if (provider !== "google" && provider !== "github") redirect("/login?error=oauth");
+  const supabase = await createClient();
+  const origin = (await headers()).get("origin") ?? "";
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: { redirectTo: `${origin}/auth/callback` },
+  });
+  if (error || !data.url) {
+    console.error("OAuth start failed", provider, error?.message);
+    redirect("/login?error=oauth");
+  }
+  redirect(data.url);
+}

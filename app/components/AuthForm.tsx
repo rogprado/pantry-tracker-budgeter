@@ -12,9 +12,10 @@ type Props = {
   mode: "login" | "signup";
   action: (prev: AuthState, formData: FormData) => Promise<AuthState>;
   notice?: string;
+  oauth?: React.ReactNode; // "Continue with Google / GitHub", rendered on the server
 };
 
-export default function AuthForm({ mode, action, notice }: Props) {
+export default function AuthForm({ mode, action, notice, oauth }: Props) {
   const [state, formAction, pending] = useActionState(action, undefined);
   const isSignup = mode === "signup";
 
@@ -30,7 +31,7 @@ export default function AuthForm({ mode, action, notice }: Props) {
 
   return (
     <AuthShell>
-      <form action={formAction} noValidate className="space-y-5">
+      <div className="space-y-5">
         <div>
           <p className="mb-2 text-xs font-semibold tracking-[0.12em] text-plum uppercase">{isSignup ? "Create an account" : "Log in"}</p>
           <h1 className="font-display text-[2.75rem] leading-[1.05] font-normal text-eggplant">{isSignup ? "Start your pantry" : "Welcome back"}</h1>
@@ -39,6 +40,14 @@ export default function AuthForm({ mode, action, notice }: Props) {
           </p>
         </div>
 
+        {oauth}
+        <div className="flex items-center gap-3 text-sm text-muted" aria-hidden="true">
+          <span className="h-px flex-1 bg-lavender-200" />
+          or use your email
+          <span className="h-px flex-1 bg-lavender-200" />
+        </div>
+
+        <form action={formAction} noValidate className="space-y-5">
         {notice && !state?.error && <p className="rounded-lg bg-lavender px-4 py-3 text-sm font-medium text-eggplant">{notice}</p>}
         {state?.error && (
           <p role="alert" className="flex items-center gap-2 rounded-lg bg-expired-soft px-4 py-3 text-sm font-medium text-expired-ink">
@@ -65,7 +74,8 @@ export default function AuthForm({ mode, action, notice }: Props) {
             {isSignup ? "Log in" : "Create an account"}
           </Link>
         </p>
-      </form>
+        </form>
+      </div>
     </AuthShell>
   );
 }
