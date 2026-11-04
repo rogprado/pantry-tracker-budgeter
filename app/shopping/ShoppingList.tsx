@@ -48,9 +48,7 @@ export default function ShoppingList({ staples, budget }: { staples: Staple[]; b
           </p>
         </div>
         {budget ? (
-          <p className="text-sm text-gray-600">
-            {budget.month} budget {money(budget.monthly)} · spent {money(budget.spent)} · left {money(budget.remaining)}
-          </p>
+          <p className="text-sm text-gray-600">Staples plus the suggestions below, against what&apos;s left this month.</p>
         ) : (
           <p className="text-sm text-gray-600">No monthly budget set, so nothing is left out for cost.</p>
         )}

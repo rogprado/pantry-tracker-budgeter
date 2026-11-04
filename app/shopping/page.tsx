@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import BudgetBar from "@/app/components/BudgetBar";
 import ShoppingList, { type BudgetInfo } from "@/app/shopping/ShoppingList";
 import { listStaples, listStatItems } from "@/lib/pantry";
 import { monthName, spentThisMonth, todayInTimeZone } from "@/lib/stats";
@@ -21,20 +22,22 @@ export default async function ShoppingPage() {
     .map((s) => ({ id: s.id, name: s.name, price: s.price === null ? null : Number(s.price) }));
 
   const monthly = profile.data?.monthly_budget;
+  const spentNow = spentThisMonth(statItems, today);
+  const monthLabel = monthName(today.slice(0, 7)).split(" ")[0];
   let budget: BudgetInfo = null;
   if (monthly !== null && monthly !== undefined) {
-    const spent = spentThisMonth(statItems, today);
     budget = {
       monthly: Number(monthly),
-      spent,
-      remaining: Math.round((Number(monthly) - spent) * 100) / 100,
-      month: monthName(today.slice(0, 7)).split(" ")[0],
+      spent: spentNow,
+      remaining: Math.round((Number(monthly) - spentNow) * 100) / 100,
+      month: monthLabel,
     };
   }
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-heading">Shopping list</h1>
+      <BudgetBar spent={spentNow} budget={budget ? budget.monthly : null} month={monthLabel} />
       <ShoppingList staples={toRestock} budget={budget} />
     </div>
   );

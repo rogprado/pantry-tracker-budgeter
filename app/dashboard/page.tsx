@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import BudgetBar from "@/app/components/BudgetBar";
 import { createClient } from "@/lib/supabase/server";
 import PeriodFilter from "@/app/dashboard/PeriodFilter";
 import SpendingChart from "@/app/dashboard/SpendingChart";
@@ -16,6 +17,8 @@ import {
   spendingByCategory,
   spendingOverTime,
   spentInPeriod,
+  monthName,
+  spentThisMonth,
   todayInTimeZone,
 } from "@/lib/stats";
 
@@ -24,7 +27,11 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
   const { data } = await supabase.auth.getUser();
   if (!data.user) redirect("/login");
 
-  const items = await listStatItems();
+  const [items, profile] = await Promise.all([
+    listStatItems(),
+    supabase.from("users").select("monthly_budget").eq("id", data.user.id).maybeSingle(),
+  ]);
+  const monthlyBudget = profile.data?.monthly_budget == null ? null : Number(profile.data.monthly_budget);
   const today = todayInTimeZone();
   const period = parsePeriod(await searchParams, today);
   const label = periodLabel(period);
@@ -39,6 +46,13 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-heading">Dashboard</h1>
+
+      {/* Always this month, whatever period is picked below. */}
+      <BudgetBar
+        spent={spentThisMonth(items, today)}
+        budget={monthlyBudget}
+        month={monthName(today.slice(0, 7)).split(" ")[0]}
+      />
 
       <PeriodFilter
         period={period}

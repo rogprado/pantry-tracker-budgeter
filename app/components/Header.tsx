@@ -22,7 +22,9 @@ export default async function Header() {
               <Link href="/recipes" className="text-heading hover:text-primary">Recipes</Link>
               <Link href="/shopping" className="text-heading hover:text-primary">Shopping</Link>
             </nav>
-            <span className="hidden text-gray-600 sm:inline">{user.email}</span>
+            <Link href="/settings" className="text-gray-600 hover:text-primary" title={user.email ?? undefined}>
+              Settings
+            </Link>
             <form action={logout}>
               <button type="submit" className="btn-outline">
                 Log out
