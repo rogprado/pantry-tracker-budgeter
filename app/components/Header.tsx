@@ -16,6 +16,7 @@ export default async function Header() {
         {user ? (
           <div className="flex items-center gap-4 text-sm">
             <nav className="flex gap-4 font-semibold">
+              <Link href="/dashboard" className="text-heading hover:text-primary">Dashboard</Link>
               <Link href="/pantry" className="text-heading hover:text-primary">Pantry</Link>
               <Link href="/pantry/staples" className="text-heading hover:text-primary">Staples</Link>
             </nav>
