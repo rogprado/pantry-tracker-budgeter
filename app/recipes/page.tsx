@@ -1,5 +1,6 @@
 import { BookHeart } from "lucide-react";
 import { redirect } from "next/navigation";
+import CookedThis, { type CookItem } from "@/app/recipes/CookedThis";
 import RecipeSuggester from "@/app/recipes/RecipeSuggester";
 import { EmptyState, PageHeader } from "@/app/components/ui";
 import { createClient } from "@/lib/supabase/server";
@@ -10,11 +11,22 @@ export default async function RecipesPage() {
   const { data } = await supabase.auth.getUser();
   if (!data.user) redirect("/login");
 
-  // RLS returns only my saved recipes.
-  const { data: saved } = await supabase
-    .from("recipes")
-    .select("id, title, ingredients, instructions, created_at")
-    .order("created_at", { ascending: false });
+  // RLS returns only my own rows.
+  const [{ data: saved }, { data: stock }, { data: uses }] = await Promise.all([
+    supabase.from("recipes").select("id, title, ingredients, instructions, created_at").order("created_at", { ascending: false }),
+    supabase.from("pantry_items").select("id, name, quantity, unit").eq("in_stock", true).order("name"),
+    supabase.from("stock_movements").select("item_id, amount").eq("kind", "use").order("created_at", { ascending: false }).limit(500),
+  ]);
+  // The most recent amount used of each item, to prefill "I cooked this".
+  const lastUsed = new Map<number, number>();
+  for (const u of uses ?? []) if (!lastUsed.has(u.item_id)) lastUsed.set(u.item_id, Number(u.amount));
+  const cookItems: CookItem[] = (stock ?? []).map((i) => ({
+    id: i.id,
+    name: i.name,
+    quantity: Number(i.quantity),
+    unit: i.unit,
+    lastUsed: lastUsed.get(i.id) ?? null,
+  }));
 
   return (
     <div className="space-y-10">
@@ -56,6 +68,9 @@ export default async function RecipesPage() {
                   <div>
                     <h3 className="font-semibold text-ink">Method</h3>
                     <p className="mt-1 whitespace-pre-line text-muted">{r.instructions}</p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <CookedThis recipeTitle={r.title} ingredients={r.ingredients ?? ""} items={cookItems} />
                   </div>
                 </div>
               </details>

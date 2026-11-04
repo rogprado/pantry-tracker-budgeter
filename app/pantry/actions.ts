@@ -92,3 +92,36 @@ export async function setStar(itemId: number, starred: boolean) {
   }
   revalidatePath("/pantry", "layout");
 }
+
+// ---------- quick quantity updates ----------
+
+export type MovementResult = { ok: true; movementId: number } | { ok: false; error: string };
+
+// Use or buy some of an item. The database function logs the movement and updates
+// quantity + in-stock in one transaction, as the signed-in user (RLS applies).
+export async function recordMovement(itemId: number, kind: "use" | "purchase", amount: number): Promise<MovementResult> {
+  if (!Number.isInteger(itemId) || (kind !== "use" && kind !== "purchase") || !(amount > 0) || amount > 100000) {
+    return { ok: false, error: "That change doesn't look right." };
+  }
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("record_movement", { p_item_id: itemId, p_kind: kind, p_amount: amount });
+  if (error || !data) {
+    console.error("record_movement failed", error?.code, error?.message);
+    return { ok: false, error: "We couldn't update this item. Please try again." };
+  }
+  revalidatePath("/", "layout");
+  return { ok: true, movementId: (data as { id: number }).id };
+}
+
+// Put the item back exactly as it was before that movement.
+export async function undoMovement(movementId: number): Promise<{ ok: boolean }> {
+  if (!Number.isInteger(movementId)) return { ok: false };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("undo_movement", { p_movement_id: movementId });
+  if (error) {
+    console.error("undo_movement failed", error.code, error.message);
+    return { ok: false };
+  }
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
